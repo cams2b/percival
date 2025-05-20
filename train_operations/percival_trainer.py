@@ -10,7 +10,7 @@ from typing import Callable
 from collections import defaultdict
 
 from train_operations.make_experiment import make_experiment
-from data_operations.percival_monai_dataset import percival_dataset, percival_inference_dataset, percival_inference_dataset_extra
+from data_operations.percival_monai_dataset import percival_dataset, percival_inference_dataset
 from train_operations.percival import percival
 import torch.distributed as dist
 from torch.nn.parallel import DistributedDataParallel as DDP
