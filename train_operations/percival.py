@@ -1,4 +1,7 @@
 import os
+import numpy as np
+import pandas as pd
+from scipy.special import expit
 import torch
 import torch.nn as nn
 from torch.optim import Optimizer
@@ -9,6 +12,7 @@ from torch.cuda.amp import autocast
 from transformer_models.vit import VisionTransformer3D
 from text_operations.bert import grail
 from train_operations.loss import InfoNCE
+from data_operations.percival_monai_dataset import get_inference_transform
 
 
 class percival(nn.Module):
@@ -108,6 +112,91 @@ class percival(nn.Module):
         if not self.static_lr:
             self.training_scheduler.step()
 
+
+    def inference_from_path(self, img_path, device):
+        print(img_path)
+        transforms = get_inference_transform(self.img_size)
+        img = transforms(img_path)
+        img = torch.swapaxes(img, 1, -1) 
+        img = img.unsqueeze(0)
+        img = img.to(device)
+        z_img = self.vision(img).detach().cpu()
+        print(z_img.shape)
+        z_img = z_img.numpy()
+        print(z_img.shape)
+        return z_img
+
+    def compute_principal_components(self, z_img):
+        center_scale = pd.read_csv('train_operations/data/pca_center_scale.csv')
+        rotation = pd.read_csv('train_operations/data/pca_rotation_matrix.csv')
+        center = center_scale['center'].values
+        scale = center_scale['scale'].values
+        
+        rotation_matrix = rotation[[f'PC{i}' for i in range(1, 11)]].values  # (512, 10)
+        assert z_img.shape[1] == len(center), "[ERROR] z_img shape mismatch with PCA center"
+        
+        z_scaled = (z_img - center) / scale
+        # 4. Compute principal components
+        pc_scores = np.dot(z_scaled, rotation_matrix)  # shape (1, 10)
+
+        return pc_scores
+
+    def diagnostic_inference(self, img_path, device, target_condition=None):
+        z_img = self.inference_from_path(img_path=img_path, device=device)
+        pc = self.compute_principal_components(z_img=z_img)
+        coef_df = pd.read_csv("train_operations/data/diagnosis/diagnosis_coefficients.csv") 
+
+        if target_condition is None:
+            raise ValueError("Please specify a target_condition for inference")
+
+        # Step 3: Get coefficients for the target condition
+        row = coef_df[coef_df["condition"] == target_condition]
+        if row.empty:
+            raise ValueError(f"Condition '{target_condition}' not found in coefficient table")
+
+        row = row.iloc[0]
+        intercept = row["(Intercept)"]
+        pc_coefs = row[[f"PC{i}" for i in range(1, 11)]].values.astype(np.float32)  # shape: (10,)
+
+        # Step 4: Compute logits and probability
+        logits = np.dot(pc, pc_coefs.T) + intercept  # shape: (1,)
+        prob = expit(logits[0])  # scalar
+
+        return {
+            "principal_components": pc,
+            "condition": target_condition,
+            "predicted_probability": prob,
+            "predicted_label": int(prob >= 0.5)
+        }
+    
+    def diagnostic_inference_all_conditions(self, img_path, device):
+        z_img = self.inference_from_path(img_path=img_path, device=device)
+        pc = self.compute_principal_components(z_img=z_img)
+        coef_df = pd.read_csv("train_operations/data/diagnosis/diagnosis_coefficients.csv") 
+
+        # Step 3: Prepare predictions
+        results = []
+
+        for _, row in coef_df.iterrows():
+            condition = row["condition"]
+            intercept = row["(Intercept)"]
+
+            try:
+                pc_coefs = row[[f"PC{i}" for i in range(1, 11)]].values.astype(np.float32)
+            except KeyError:
+                print(f"[WARNING] PC columns missing for condition: {condition}")
+                continue
+
+            logit = np.dot(pc, pc_coefs.T) + intercept  # shape: (1,)
+            prob = expit(logit[0])  # scalar
+
+            results.append({
+                "condition": condition,
+                "predicted_probability": prob,
+                "predicted_label": int(prob >= 0.5)
+            })
+
+        return pd.DataFrame(results)
 
 
 

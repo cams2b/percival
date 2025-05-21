@@ -14,6 +14,17 @@ def extract_radiology_report_text(report_path):
     return report
 
 
+def get_inference_transform(image_size=(128, 256, 256), target_spacing=(1.5, 1.5, 3)):
+    return Compose([
+        LoadImage(image_only=True),
+        EnsureChannelFirst(),
+        Orientation(axcodes="RAS"),
+        Spacing(pixdim=target_spacing, mode="bilinear"),
+        ScaleIntensityRange(-1000, 1000, 0.0, 1.0, clip=True),
+        SpatialPad(spatial_size=image_size[::-1]),
+        CenterSpatialCrop(roi_size=image_size[::-1]),
+        ToTensor(),
+    ])
 
 
 class percival_dataset(Dataset):
