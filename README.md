@@ -5,7 +5,7 @@ Code repository for Percival: a generalizable vision language foundation model f
 
 
 ## Diagnosis with Percival
-```
+```python
 projection_dim = 512
 king_percival = percival(in_channels=config.in_channels, 
                          projection_dim=projection_dim, 
