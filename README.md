@@ -22,3 +22,6 @@ diagnostic_results = king_percival.diagnostic_inference_all_conditions(img_path=
 | Heart failure   | 428.2     | 0.79 (0.76, 0.82)      |
 | HFrEF           | 428.3     | 0.85 (0.81, 0.88)      |
 | HFpEF           | 428.4     | 0.81 (0.74, 0.87)      |
+| Essential Hypertension      | 401.1     | 0.77 (0.75, 0.80)      |
+| Hypertensive heart disease      | 402.11     | 0.78 (0.73, 0.83)      |
+| Hypertensive CKD      | 403.1     | 0.76 (0.71, 0.82)      |
