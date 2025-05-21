@@ -19,5 +19,5 @@ diagnostic_results = king_percival.diagnostic_inference_all_conditions(img_path=
 ## Available diagnostic models
 | Diagnosis    | Phecode        | 5-fold AUROC  |
 | :---         |     :---:      |          ---: |
-| git status   | git status     | git status    |
+| Heart failure   | 428.2     | 0.79 (0.76, 0.82)    |
 | git diff     | git diff       | git diff      |
