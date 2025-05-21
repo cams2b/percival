@@ -17,7 +17,7 @@ diagnostic_results = king_percival.diagnostic_inference_all_conditions(img_path=
 
 ```
 ## Available diagnostic models
-| Left-aligned | Center-aligned | Right-aligned |
+| Diagnosis    | Phecode        | 5-fold AUROC  |
 | :---         |     :---:      |          ---: |
 | git status   | git status     | git status    |
 | git diff     | git diff       | git diff      |
