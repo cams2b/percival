@@ -18,7 +18,7 @@ diagnostic_results = king_percival.diagnostic_inference_all_conditions(img_path=
 ```
 ## Available diagnostic models
 | Diagnosis    | Phecode        | 5-fold AUROC (95% CI)  |
-| :---         |     :---:      |          ---: |
+| :---:         |     :---:      |          :---: |
 | Heart failure   | 428.2     | 0.79 (0.76, 0.82)      |
 | HFrEF           | 428.3     | 0.85 (0.81, 0.88)      |
 | HFpEF           | 428.4     | 0.81 (0.74, 0.87)      |
