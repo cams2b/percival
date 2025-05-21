@@ -16,3 +16,4 @@ king_percival.load_image_encoder(path=img_weights)
 diagnostic_results = king_percival.diagnostic_inference_all_conditions(img_path=test_img_path, device=device)
 
 ```
+## Available diagnostic models
