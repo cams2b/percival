@@ -30,5 +30,7 @@ diagnostic_results = king_percival.diagnostic_inference_all_conditions(img_path=
 | Chronic pulmonary heart disease     | 415.2     | 0.81 (0.79, 0.83)      |
 | Cardiomegaly    | 416     | 0.80 (0.79, 0.81)      |
 | Atrial fibrillation    | 427.21     | 0.79 (0.77, 0.82)      |
+| Aortic aneurysm   | 442.1     | 0.79 (0.69, 0.89)      |
 
-Atrial fibrillation
+| Lung cancer   | 162.9     | 0.70 (0.59, 0.81)      |
+
