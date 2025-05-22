@@ -16,7 +16,7 @@ king_percival.load_image_encoder(path=img_weights)
 diagnostic_results = king_percival.diagnostic_inference_all_conditions(img_path=test_img_path, device=device)
 
 ```
-## Available diagnostic models
+## Available Circulatory system diagnostic models
 | Diagnosis    | Phecode        | 5-fold AUROC (95% CI)  |
 | :---:         |     :---:      |          :---: |
 | Heart failure   | 428.2     | 0.79 (0.76, 0.82)      |
@@ -32,5 +32,12 @@ diagnostic_results = king_percival.diagnostic_inference_all_conditions(img_path=
 | Atrial fibrillation    | 427.21     | 0.79 (0.77, 0.82)      |
 | Aortic aneurysm   | 442.1     | 0.79 (0.69, 0.89)      |
 
-| Lung cancer   | 162.9     | 0.70 (0.59, 0.81)      |
 
+## Available Neoplasm diagnostic models
+| Diagnosis    | Phecode        | 5-fold AUROC (95% CI)  |
+| :---:         |     :---:      |          :---: |
+| Lung cancer   | 165.1     | 0.70 (0.59, 0.81)      |
+| Prostate cancer   | 185     | 0.64 (0.52, 0.75)      |
+| Suspected cancer   | 195     | 0.78 (0.73, 0.83)      |
+| Malignant neoplasm   | 195.1     | 0.65 (0.59, 0.72)      |
+| Uterine leiomyoma   | 218.1     | 0.71 (0.65, 0.76)      |
