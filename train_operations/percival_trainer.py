@@ -233,16 +233,10 @@ class percival_trainer(object):
             for batch_idx, (img, txt) in enumerate(train_dataloader):
                 if batch_idx % 100 == 0:
                     print('[INFO] batch index: {}  loss: {}'.format(batch_idx, model.epoch_loss))
-                
-                # input_ids, attention_mask = model.grail.tokenize_input_array(list(txt))
-                img = img.to(device, non_blocking=True)
-                # input_ids = input_ids.to(device, non_blocking=True)
-                # attention_mask = attention_mask.to(device, non_blocking=True)
-                # model.optimize_parameters(img, input_ids, attention_mask)
 
+                img = img.to(device, non_blocking=True)
                 model.optimize_parameters(img, list(txt))
                 training_steps += 1
-
 
             # Gather loss from all processes
             if self.distributed:

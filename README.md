@@ -4,6 +4,14 @@ Code repository for Percival: a generalizable vision language foundation model f
 ![Key Graphic](images/percival.png)
 
 
+## Environment setup
+To create and activate the conda (foundation) environment:
+```bash
+conda env create -f environment.yml
+conda activate foundation
+```
+
+
 ## Diagnosis with Percival
 ```python
 projection_dim = 512
