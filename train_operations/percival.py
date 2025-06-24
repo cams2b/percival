@@ -114,16 +114,14 @@ class percival(nn.Module):
 
 
     def inference_from_path(self, img_path, device):
-        print(img_path)
         transforms = get_inference_transform(self.img_size)
         img = transforms(img_path)
         img = torch.swapaxes(img, 1, -1) 
         img = img.unsqueeze(0)
         img = img.to(device)
         z_img = self.vision(img).detach().cpu()
-        print(z_img.shape)
         z_img = z_img.numpy()
-        print(z_img.shape)
+        
         return z_img
 
     def compute_principal_components(self, z_img):
@@ -172,6 +170,7 @@ class percival(nn.Module):
     def diagnostic_inference_all_conditions(self, img_path, device):
         z_img = self.inference_from_path(img_path=img_path, device=device)
         pc = self.compute_principal_components(z_img=z_img)
+        print('[INFO] principal components done!!!!!!!!')
         coef_df = pd.read_csv("train_operations/data/diagnosis/diagnosis_coefficients.csv") 
 
         # Step 3: Prepare predictions
