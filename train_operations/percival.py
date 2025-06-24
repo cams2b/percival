@@ -170,7 +170,6 @@ class percival(nn.Module):
     def diagnostic_inference_all_conditions(self, img_path, device):
         z_img = self.inference_from_path(img_path=img_path, device=device)
         pc = self.compute_principal_components(z_img=z_img)
-        print('[INFO] principal components done!!!!!!!!')
         coef_df = pd.read_csv("train_operations/data/diagnosis/diagnosis_model_coefficients.csv") 
 
         # Step 3: Prepare predictions
