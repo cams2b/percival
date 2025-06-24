@@ -27,7 +27,7 @@ class percival_trainer(object):
                  image_col: str = None,
                  text_col: str = None,
                  evaluator = None,
-                 image_size: tuple = (128, 512, 512),
+                 image_size: tuple = (128, 256, 256),
                  in_channels: int = 1,
                  projection_dim: int = 512,
                  language_model: str = None,
@@ -52,6 +52,7 @@ class percival_trainer(object):
                  show_progress_bar: bool = False,
                  checkpoint_path: str = None,
                  continue_training: bool = False,
+                 augment: bool = False,
                  image_weights: str = None,
                  language_weights: str = None,
                  load_best_model: bool = True,
@@ -91,6 +92,7 @@ class percival_trainer(object):
         self.checkpoint_path = checkpoint_path
         self.image_weights = image_weights
         self.continue_training = continue_training
+        self.augment = augment
         self.language_weights = language_weights
         self.load_best_model = load_best_model
         self.num_workers = num_workers

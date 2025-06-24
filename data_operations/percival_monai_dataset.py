@@ -5,6 +5,11 @@ from monai.transforms import (
     Compose, LoadImage, EnsureChannelFirst, Orientation, Spacing,
     ScaleIntensityRange, SpatialPad, CenterSpatialCrop, ToTensor
 )
+from monai.transforms import (
+    Compose, LoadImage, EnsureChannelFirst, Orientation, Spacing,
+    ScaleIntensityRange, SpatialPad, CenterSpatialCrop, ToTensor, 
+    RandZoom, RandSpatialCrop, RandFlip, RandRotate90, RandGaussianNoise
+)
 
 
 def extract_radiology_report_text(report_path):
@@ -27,13 +32,15 @@ def get_inference_transform(image_size=(128, 256, 256), target_spacing=(1.5, 1.5
     ])
 
 
+
 class percival_dataset(Dataset):
     def __init__(self,
                  data_path: str,
                  image_col: str,
                  text_col: str,
                  image_size: tuple = (128, 256, 256),
-                 target_spacing: tuple = (1.5, 1.5, 3)):
+                 target_spacing: tuple = (1.5, 1.5, 3),
+                 augment = False):
         
         self.df = pd.read_excel(data_path)
         self.image_paths = self.df[image_col].values
@@ -43,16 +50,33 @@ class percival_dataset(Dataset):
         self.tokenizer = None
 
         # Compose transforms ONCE (saves significant overhead)
-        self.transforms = Compose([
-            LoadImage(image_only=True),
-            EnsureChannelFirst(),
-            Orientation(axcodes="RAS"),
-            Spacing(pixdim=self.target_spacing, mode="bilinear"),
-            ScaleIntensityRange(-1000, 1000, 0.0, 1.0, clip=True),
-            SpatialPad(spatial_size=self.image_size[::-1]),
-            CenterSpatialCrop(roi_size=self.image_size[::-1]),
-            ToTensor(),
-        ])
+        if augment:
+            self.transforms = Compose([
+                LoadImage(image_only=True),
+                EnsureChannelFirst(),
+                Orientation(axcodes="RAS"),
+                Spacing(pixdim=self.target_spacing, mode="bilinear"),
+                ScaleIntensityRange(-1000, 1000, 0.0, 1.0, clip=True),
+                RandGaussianNoise(prob=0.5, mean=0.0, std=0.01),
+                RandZoom(min_zoom=0.85, max_zoom=1.15, prob=0.5),
+                RandSpatialCrop(roi_size=self.image_size[::-1], random_center=True, random_size=False),
+                SpatialPad(spatial_size=self.image_size[::-1]),
+                RandFlip(spatial_axis=[0, 1, 2], prob=0.3),
+                RandRotate90(prob=0.3),
+
+                ToTensor()
+            ])
+        else:
+            self.transforms = Compose([
+                LoadImage(image_only=True),
+                EnsureChannelFirst(),
+                Orientation(axcodes="RAS"),
+                Spacing(pixdim=self.target_spacing, mode="bilinear"),
+                ScaleIntensityRange(-1000, 1000, 0.0, 1.0, clip=True),
+                SpatialPad(spatial_size=self.image_size[::-1]),
+                CenterSpatialCrop(roi_size=self.image_size[::-1]),
+                ToTensor(),
+            ])
 
     def __len__(self):
         return len(self.image_paths)
@@ -83,6 +107,7 @@ class percival_dataset(Dataset):
             return self.__getitem__(new_index)
 
         return img, text
+
 
 
 

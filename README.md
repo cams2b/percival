@@ -14,8 +14,9 @@ conda activate foundation
 
 ## Diagnosis with Percival
 ```python
+in_channels = 1
 projection_dim = 512
-king_percival = percival(in_channels=config.in_channels, 
+king_percival = percival(in_channels=in_channels, 
                          projection_dim=projection_dim, 
                          img_size=(128, 256, 256))
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")

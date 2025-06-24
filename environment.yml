@@ -1,4 +1,4 @@
-name: foundation
+name: percival
 channels:
   - defaults
 dependencies:
