@@ -108,9 +108,10 @@ dependencies:
       - tifffile==2024.7.24
       - timm==1.0.12
       - tokenizers==0.21.0
-      - torch==2.4.0+cu118
-      - torchaudio==2.4.0+cu118
-      - torchvision==0.19.0+cu118
+      - torch==2.4.0
+      - torchaudio==2.4.0
+      - torchvision==0.19.0
+      - --extra-index-url https://download.pytorch.org/whl/cu118
       - tqdm==4.66.5
       - transformers==4.48.1
       - triton==3.0.0
