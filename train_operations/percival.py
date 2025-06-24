@@ -139,18 +139,18 @@ class percival(nn.Module):
 
         return pc_scores
 
-    def diagnostic_inference(self, img_path, device, target_condition=None):
+    def diagnostic_inference(self, img_path, device, target_phecode=None):
         z_img = self.inference_from_path(img_path=img_path, device=device)
         pc = self.compute_principal_components(z_img=z_img)
-        coef_df = pd.read_csv("train_operations/data/diagnosis/diagnosis_coefficients.csv") 
+        coef_df = pd.read_csv("train_operations/data/diagnosis/diagnosis_model_coefficients.csv") 
 
-        if target_condition is None:
+        if target_phecode is None:
             raise ValueError("Please specify a target_condition for inference")
 
         # Step 3: Get coefficients for the target condition
-        row = coef_df[coef_df["condition"] == target_condition]
+        row = coef_df[coef_df["phecode"] == target_phecode]
         if row.empty:
-            raise ValueError(f"Condition '{target_condition}' not found in coefficient table")
+            raise ValueError(f"Condition '{target_phecode}' not found in coefficient table")
 
         row = row.iloc[0]
         intercept = row["(Intercept)"]
@@ -162,7 +162,7 @@ class percival(nn.Module):
 
         return {
             "principal_components": pc,
-            "condition": target_condition,
+            "phecode": target_phecode,
             "predicted_probability": prob,
             "predicted_label": int(prob >= 0.5)
         }
@@ -171,26 +171,26 @@ class percival(nn.Module):
         z_img = self.inference_from_path(img_path=img_path, device=device)
         pc = self.compute_principal_components(z_img=z_img)
         print('[INFO] principal components done!!!!!!!!')
-        coef_df = pd.read_csv("train_operations/data/diagnosis/diagnosis_coefficients.csv") 
+        coef_df = pd.read_csv("train_operations/data/diagnosis/diagnosis_model_coefficients.csv") 
 
         # Step 3: Prepare predictions
         results = []
 
         for _, row in coef_df.iterrows():
-            condition = row["condition"]
+            phecode = row["phecode"]
             intercept = row["(Intercept)"]
 
             try:
                 pc_coefs = row[[f"PC{i}" for i in range(1, 11)]].values.astype(np.float32)
             except KeyError:
-                print(f"[WARNING] PC columns missing for condition: {condition}")
+                print(f"[WARNING] PC columns missing for phecode: {phecode}")
                 continue
 
             logit = np.dot(pc, pc_coefs.T) + intercept  # shape: (1,)
             prob = expit(logit[0])  # scalar
 
             results.append({
-                "condition": condition,
+                "phecode": phecode,
                 "predicted_probability": prob,
                 "predicted_label": int(prob >= 0.5)
             })
