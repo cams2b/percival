@@ -34,7 +34,7 @@ king_percival.load_image_encoder(path=img_weights)
 diagnostic_results = king_percival.diagnostic_inference_all_conditions(img_path=img_path, device=device)
 
 ```
-## Available circulatory system disease phenotype classification models
+## Circulatory system disease phenotype classification models
 | Diagnosis    | Phecode        | 5-fold AUROC (95% CI)  |
 | :---:         |     :---:      |          :---: |
 | Heart failure   | 428.2     | 0.79 (0.76, 0.82)      |
@@ -51,7 +51,7 @@ diagnostic_results = king_percival.diagnostic_inference_all_conditions(img_path=
 | Aortic aneurysm   | 442.1     | 0.79 (0.69, 0.89)      |
 
 
-## Available Neoplasm diagnostic models
+## Neoplasm disease phenotype classification models
 | Diagnosis    | Phecode        | 5-fold AUROC (95% CI)  |
 | :---:         |     :---:      |          :---: |
 | Lung cancer   | 165.1     | 0.70 (0.59, 0.81)      |
