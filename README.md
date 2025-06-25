@@ -14,15 +14,24 @@ conda activate percival
 
 ## 🔍 Diagnosis with Percival
 ```python
+
+import pandas as pd
+import numpy as np
+import SimpleITK as sitk
+import torch
+from train_operations.percival import percival
+
+img_path = '<Path to image (.nii)>'
 in_channels = 1
 projection_dim = 512
+img_weights = '<Path to image encoder>/percival_vision_encoder.pth'
 king_percival = percival(in_channels=in_channels, 
                          projection_dim=projection_dim, 
                          img_size=(128, 256, 256))
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 king_percival.to(device)
 king_percival.load_image_encoder(path=img_weights)
-diagnostic_results = king_percival.diagnostic_inference_all_conditions(img_path=test_img_path, device=device)
+diagnostic_results = king_percival.diagnostic_inference_all_conditions(img_path=img_path, device=device)
 
 ```
 ## Available Circulatory system diagnostic models
