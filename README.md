@@ -34,7 +34,7 @@ king_percival.load_image_encoder(path=img_weights)
 diagnostic_results = king_percival.diagnostic_inference_all_conditions(img_path=img_path, device=device)
 
 ```
-## Available Circulatory system diagnostic models
+## Available circulatory system disease phenotype classification models
 | Diagnosis    | Phecode        | 5-fold AUROC (95% CI)  |
 | :---:         |     :---:      |          :---: |
 | Heart failure   | 428.2     | 0.79 (0.76, 0.82)      |
