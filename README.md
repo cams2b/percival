@@ -1,4 +1,8 @@
 # Percival
+
+![PyPI - Python Version](https://img.shields.io/badge/python-3.10-blue)
+
+
 Code repository for Percival: a generalizable vision language foundation model for computed tomography
 
 ![Key Graphic](images/percival.png)
@@ -34,7 +38,7 @@ king_percival.load_image_encoder(path=img_weights)
 diagnostic_results = king_percival.diagnostic_inference_all_conditions(img_path=img_path, device=device)
 
 ```
-## Circulatory System Diagnostic Models
+## Circulatory System Disease Phenotype Models
 | Diagnosis                                                          |   Phecode | 5-fold AUROC (95% CI)   |
 |:-------------------------------------------------------------------|----------:|:------------------------|
 | Heart failure with preserved EF [Diastolic heart failure]          |    428.4  | 0.82 (0.79, 0.86)       |
@@ -54,7 +58,7 @@ diagnostic_results = king_percival.diagnostic_inference_all_conditions(img_path=
 | Palpitations                                                       |    427.9  | 0.67 (0.65, 0.69)       |
 
 
-## Respiratory Diagnostic Models
+## Respiratory Disease Phenotype Models
 | Diagnosis                                                   |   Phecode | 5-fold AUROC (95% CI)   |
 |:------------------------------------------------------------|----------:|:------------------------|
 | Pleurisy; pleural effusion                                  |    507    | 0.79 (0.77, 0.80)       |
@@ -69,7 +73,7 @@ diagnostic_results = king_percival.diagnostic_inference_all_conditions(img_path=
 | Asthma                                                      |    495    | 0.63 (0.60, 0.66)       |
 
 
-## Endocrine/Metabolic Diagnostic Models
+## Endocrine/Metabolic Disease Phenotype Models
 | Diagnosis                                        |   Phecode | 5-fold AUROC (95% CI)   |
 |:-------------------------------------------------|----------:|:------------------------|
 | Morbid obesity                                   |    278.11 | 0.90 (0.87, 0.94)       |
@@ -84,7 +88,7 @@ diagnostic_results = king_percival.diagnostic_inference_all_conditions(img_path=
 | Nontoxic multinodular goiter                     |    241.2  | 0.64 (0.58, 0.70)       |
 
 
-## Genitourinary Diagnostic Models
+## Genitourinary Disease Phenotype Models
 | Diagnosis                                                                       |   Phecode | 5-fold AUROC (95% CI)   |
 |:--------------------------------------------------------------------------------|----------:|:------------------------|
 | Kidney replaced by transplant                                                   |     587   | 0.83 (0.79, 0.87)       |
@@ -99,7 +103,7 @@ diagnostic_results = king_percival.diagnostic_inference_all_conditions(img_path=
 | Elevated prostate specific antigen [PSA]                                        |     796   | 0.62 (0.56, 0.68)       |
 
 
-## Musculoskeletal Diagnostic Models
+## Musculoskeletal Disease Phenotype Models
 | Diagnosis                                          |   Phecode | 5-fold AUROC (95% CI)   |
 |:---------------------------------------------------|----------:|:------------------------|
 | Senile osteoporosis                                |    743.12 | 0.81 (0.80, 0.82)       |
