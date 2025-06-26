@@ -165,7 +165,8 @@ class percival_trainer(object):
             data_path=self.training_path, 
             image_col=self.image_col, 
             text_col=self.text_col, 
-            image_size=self.image_size)
+            image_size=self.image_size,
+            augment=self.augment)
 
         # Setup DataLoaders with DistributedSampler
         if self.distributed:

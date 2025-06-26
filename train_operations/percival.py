@@ -66,7 +66,6 @@ class percival(nn.Module):
         self.static_lr = static_lr
         self.criterion = InfoNCE()
         self.vision = VisionTransformer3D(img_size=self.img_size, patch_size=(64, 64, 64), in_chans=self.in_channels, num_classes=self.projection_dim)
-        # self.grail = grail(self.language_model, projection_dim=self.projection_dim, projection_bias=False, embed_last_layer=self.embed_last_layer)
         self.grail = grail(projection_dim=self.projection_dim)
 
         self.optimizer = optimizer_class(
