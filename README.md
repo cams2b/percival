@@ -14,6 +14,8 @@ To create and activate the conda (percival) environment:
 conda env create -f environment.yml
 conda activate percival
 ```
+*A GPU is required to use this conda environment.*
+
 
 ## Pretrained Models
 The pretrained Percival models were trained on over 400,000 CT volumes paired with radiology reports from more than 50,000 Penn Medicine BioBank (PMBB) participants. These models cover multiple anatomical regions and imaging protocols.
