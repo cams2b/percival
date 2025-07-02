@@ -15,6 +15,14 @@ conda env create -f environment.yml
 conda activate percival
 ```
 
+## Pretrained Models
+The pretrained Percival models were trained on over 400,000 CT volumes paired with radiology reports from more than 50,000 Penn Medicine Biobank (PMBB) participants. These models cover multiple anatomical regions and imaging protocols.
+
+| Model                   | Download Link                                      |
+|-------------------------|----------------------------------------------------|
+| Percival Image Encoder  | [Download](https://zenodo.org/your-image-encoder-link) |
+| Percival Text Encoder   | [Download](https://zenodo.org/your-text-encoder-link)  |
+
 
 ## 🔍 Diagnosis with Percival
 ```python
