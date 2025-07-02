@@ -224,10 +224,18 @@ class percival(nn.Module):
 
         row = row.iloc[0]
         pc_coefs = row[[f"PC{i}" for i in range(1, 11)]].values.astype(np.float32)  # shape: (10,)
+        low_risk_threshold = row['low_risk_threshold'].values.astype(np.float32)
+        high_risk_threshold = row['high_risk_threshold'].values.astype(np.float32)
 
         # Compute linear predictor (LP) and hazard
         linear_predictor = np.dot(pc, pc_coefs.T).item()  # scalar
         relative_hazard = np.exp(linear_predictor)
+        if linear_predictor < low_risk_threshold:
+            risk_strata = 'low-risk'
+        elif linear_predictor > high_risk_threshold:
+            risk_strata = 'high-risk'
+        else:
+            risk_strata = 'intermediate-risk'
 
         return {
             "principal_components": pc,
@@ -247,6 +255,8 @@ class percival(nn.Module):
 
         for _, row in coef_df.iterrows():
             condition = row["condition"]
+            low_risk_threshold = row['low_risk_threshold'].values.astype(np.float32)
+            high_risk_threshold = row['high_risk_threshold'].values.astype(np.float32)
 
             try:
                 pc_coefs = row[[f"PC{i}" for i in range(1, 11)]].values.astype(np.float32)
@@ -257,10 +267,18 @@ class percival(nn.Module):
             linear_predictor = np.dot(pc, pc_coefs.T).item()
             relative_hazard = np.exp(linear_predictor)
 
+            if linear_predictor < low_risk_threshold:
+                risk_strata = 'low-risk'
+            elif linear_predictor > high_risk_threshold:
+                risk_strata = 'high-risk'
+            else:
+                risk_strata = 'intermediate-risk'
+
             results.append({
                 "condition": condition,
                 "linear_predictor": linear_predictor,
-                "relative_hazard": relative_hazard
+                "relative_hazard": relative_hazard,
+                "risk_strata": risk_strata
             })
 
         return pd.DataFrame(results)
