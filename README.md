@@ -54,8 +54,8 @@ diagnostic_results = king_percival.diagnostic_inference_all_conditions(img_path=
 | Heart failure with preserved EF [Diastolic heart failure]          |    428.4  | 0.82 (0.79, 0.86)       |
 | Hypertensive heart disease                                         |    401.21 | 0.82 (0.79, 0.84)       |
 | Heart failure with reduced EF [Systolic or combined heart failure] |    428.3  | 0.80 (0.77, 0.83)       |
-| Heart failure NOS                                                  |    428.2  | 0.79 (0.76, 0.83)       |
-| Congestive heart failure (CHF) NOS                                 |    428.1  | 0.79 (0.77, 0.80)       |
+| Heart failure                                                      |    428.2  | 0.79 (0.76, 0.83)       |
+| Congestive heart failure (CHF)                                     |    428.1  | 0.79 (0.77, 0.80)       |
 | Coronary atherosclerosis                                           |    411.4  | 0.79 (0.78, 0.80)       |
 | Paroxysmal ventricular tachycardia                                 |    427.12 | 0.79 (0.76, 0.81)       |
 | Atrial fibrillation                                                |    427.21 | 0.78 (0.76, 0.80)       |
@@ -64,7 +64,7 @@ diagnostic_results = king_percival.diagnostic_inference_all_conditions(img_path=
 | Primary/intrinsic cardiomyopathies                                 |    425.1  | 0.77 (0.74, 0.80)       |
 | Angina pectoris                                                    |    411.3  | 0.74 (0.72, 0.75)       |
 | Nonspecific chest pain                                             |    418    | 0.72 (0.69, 0.75)       |
-| Arrhythmia (cardiac) NOS                                           |    427.5  | 0.70 (0.68, 0.72)       |
+| Arrhythmia (cardiac)                                               |    427.5  | 0.70 (0.68, 0.72)       |
 | Palpitations                                                       |    427.9  | 0.67 (0.65, 0.69)       |
 
 
@@ -101,11 +101,10 @@ diagnostic_results = king_percival.diagnostic_inference_all_conditions(img_path=
 ## Genitourinary Disease Phenotype Models
 | Description                                                                     |   Phecode | 5-fold AUROC (95% CI)   |
 |:--------------------------------------------------------------------------------|----------:|:------------------------|
-| Kidney replaced by transplant                                                   |     587   | 0.83 (0.79, 0.87)       |
 | Hyperplasia of prostate                                                         |     600   | 0.83 (0.81, 0.85)       |
 | Chronic renal failure [CKD]                                                     |     585.3 | 0.80 (0.80, 0.81)       |
 | Acute renal failure                                                             |     585.1 | 0.79 (0.77, 0.81)       |
-| Renal failure NOS                                                               |     585.2 | 0.75 (0.71, 0.79)       |
+| Renal failure                                                                   |     585.2 | 0.75 (0.71, 0.79)       |
 | Calculus of kidney                                                              |     594.1 | 0.75 (0.72, 0.77)       |
 | Ovarian cyst                                                                    |     628   | 0.70 (0.67, 0.73)       |
 | Chronic kidney disease, Stage I or II                                           |     585.4 | 0.70 (0.66, 0.74)       |
@@ -117,12 +116,12 @@ diagnostic_results = king_percival.diagnostic_inference_all_conditions(img_path=
 | Description                                        |   Phecode | 5-fold AUROC (95% CI)   |
 |:---------------------------------------------------|----------:|:------------------------|
 | Senile osteoporosis                                |    743.12 | 0.81 (0.80, 0.82)       |
-| Osteoporosis NOS                                   |    743.11 | 0.80 (0.78, 0.83)       |
-| Osteoarthrosis NOS                                 |    740.9  | 0.75 (0.74, 0.76)       |
+| Osteoporosis                                       |    743.11 | 0.80 (0.78, 0.83)       |
+| Osteoarthrosis                                     |    740.9  | 0.75 (0.74, 0.76)       |
 | Osteoarthritis; localized                          |    740.1  | 0.75 (0.75, 0.76)       |
 | Symptoms and disorders of the joints               |    741    | 0.72 (0.68, 0.77)       |
 | Pain in joint                                      |    745    | 0.68 (0.64, 0.73)       |
 | Osteopenia or other disorder of bone and cartilage |    743.9  | 0.66 (0.65, 0.68)       |
 | Rheumatoid arthritis                               |    714.1  | 0.66 (0.62, 0.69)       |
 | Spondylosis without myelopathy                     |    721.1  | 0.64 (0.60, 0.68)       |
-| Arthropathy NOS                                    |    716.9  | 0.60 (0.52, 0.68)       |
+| Arthropathy                                        |    716.9  | 0.60 (0.52, 0.68)       |
