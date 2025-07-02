@@ -26,6 +26,7 @@ The pretrained Percival models were trained on over 400,000 CT volumes paired wi
 
 
 ## 🔍 Disease Phenotype Classification with Percival
+*Performance metrics reported below reflect predictions made using imaging data alone, without additional clinical covariates.*
 ```python
 
 import pandas as pd
