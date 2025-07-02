@@ -25,7 +25,7 @@ The pretrained Percival models were trained on over 400,000 CT volumes paired wi
 
 
 
-## 🔍 Diagnosis with Percival
+## 🔍 Disease Phenotype Classification with Percival
 ```python
 
 import pandas as pd
@@ -48,7 +48,7 @@ diagnostic_results = king_percival.diagnostic_inference_all_conditions(img_path=
 
 ```
 ## Circulatory System Disease Phenotype Models
-| Diagnosis                                                          |   Phecode | 5-fold AUROC (95% CI)   |
+| Description                                                        |   Phecode | 5-fold AUROC (95% CI)   |
 |:-------------------------------------------------------------------|----------:|:------------------------|
 | Heart failure with preserved EF [Diastolic heart failure]          |    428.4  | 0.82 (0.79, 0.86)       |
 | Hypertensive heart disease                                         |    401.21 | 0.82 (0.79, 0.84)       |
@@ -68,7 +68,7 @@ diagnostic_results = king_percival.diagnostic_inference_all_conditions(img_path=
 
 
 ## Respiratory Disease Phenotype Models
-| Diagnosis                                                   |   Phecode | 5-fold AUROC (95% CI)   |
+| Description                                                 |   Phecode | 5-fold AUROC (95% CI)   |
 |:------------------------------------------------------------|----------:|:------------------------|
 | Pleurisy; pleural effusion                                  |    507    | 0.79 (0.77, 0.80)       |
 | Pulmonary collapse; interstitial and compensatory emphysema |    508    | 0.77 (0.75, 0.78)       |
@@ -83,7 +83,7 @@ diagnostic_results = king_percival.diagnostic_inference_all_conditions(img_path=
 
 
 ## Endocrine/Metabolic Disease Phenotype Models
-| Diagnosis                                        |   Phecode | 5-fold AUROC (95% CI)   |
+| Description                                      |   Phecode | 5-fold AUROC (95% CI)   |
 |:-------------------------------------------------|----------:|:------------------------|
 | Morbid obesity                                   |    278.11 | 0.90 (0.87, 0.94)       |
 | Obesity                                          |    278.1  | 0.86 (0.86, 0.87)       |
@@ -98,7 +98,7 @@ diagnostic_results = king_percival.diagnostic_inference_all_conditions(img_path=
 
 
 ## Genitourinary Disease Phenotype Models
-| Diagnosis                                                                       |   Phecode | 5-fold AUROC (95% CI)   |
+| Description                                                                     |   Phecode | 5-fold AUROC (95% CI)   |
 |:--------------------------------------------------------------------------------|----------:|:------------------------|
 | Kidney replaced by transplant                                                   |     587   | 0.83 (0.79, 0.87)       |
 | Hyperplasia of prostate                                                         |     600   | 0.83 (0.81, 0.85)       |
@@ -113,7 +113,7 @@ diagnostic_results = king_percival.diagnostic_inference_all_conditions(img_path=
 
 
 ## Musculoskeletal Disease Phenotype Models
-| Diagnosis                                          |   Phecode | 5-fold AUROC (95% CI)   |
+| Description                                        |   Phecode | 5-fold AUROC (95% CI)   |
 |:---------------------------------------------------|----------:|:------------------------|
 | Senile osteoporosis                                |    743.12 | 0.81 (0.80, 0.82)       |
 | Osteoporosis NOS                                   |    743.11 | 0.80 (0.78, 0.83)       |
