@@ -241,7 +241,8 @@ class percival(nn.Module):
             "principal_components": pc,
             "condition": target_condition,
             "linear_predictor": linear_predictor,
-            "relative_hazard": relative_hazard
+            "relative_hazard": relative_hazard,
+            "risk_strata": risk_strata
         }
 
     

@@ -34,7 +34,6 @@ class PatchEmbed3D(PatchEmbed):
             kernel_size=patch_size,
             stride=patch_size
         )
-        # self.norm = LayerNorm(embed_dim)
         self.norm = LayerNorm(embed_dim, eps=1e-6)
 
     def forward(self, x):

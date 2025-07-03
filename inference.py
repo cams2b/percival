@@ -22,7 +22,7 @@ import torch
 from train_operations.percival import percival
 
 
-def single_inference_CT(path):
+def classification_inference(path):
     img_weights = '/cbica/home/beechec/research/model_weights/foundation_percival/percival_checkpoint/weights/image_encoder_epoch_1_loss_1839.1098633.pth'
     in_channels = 1
     projection_dim = 512
@@ -41,4 +41,4 @@ def single_inference_CT(path):
 
 if __name__ == '__main__':
     img_path = ''
-    single_inference_CT(path=img_path)
+    classification_inference(path=img_path)
