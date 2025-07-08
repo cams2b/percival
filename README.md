@@ -1,7 +1,7 @@
 # Percival
 
 [![medRxiv](https://img.shields.io/badge/medRxiv-10.1101%2F2025.07.03.25330654-0077cc?style=flat)](https://www.medrxiv.org/content/10.1101/2025.07.03.25330654v1) ![PyPI - Python Version](https://img.shields.io/badge/python-3.10-blue)
- [![Hugging Face](https://huggingface.co/datasets/huggingface/badges/resolve/main/model-on-hf-md.svg)](https://huggingface.co/cbeeche/percival) 
+ [![Hugging Face](https://huggingface.co/datasets/huggingface/badges/resolve/main/model-on-hf-sm.svg)](https://huggingface.co/cbeeche/percival) 
 
 Code repository for Percival: a generalizable vision language foundation model for computed tomography
 
