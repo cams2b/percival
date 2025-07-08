@@ -40,7 +40,7 @@ from train_operations.percival import percival
 img_path = '<Path to image (.nii)>'
 in_channels = 1
 projection_dim = 512
-img_weights = '<Path to image encoder>/percival_vision_encoder.pth'
+img_weights = '<Path to image encoder>/image_encoder.pth'
 king_percival = percival(in_channels=in_channels, 
                          projection_dim=projection_dim, 
                          img_size=(128, 256, 256))
@@ -143,7 +143,7 @@ from train_operations.percival import percival
 img_path = '<Path to image (.nii)>'
 in_channels = 1
 projection_dim = 512
-img_weights = '<Path to image encoder>/percival_vision_encoder.pth'
+img_weights = '<Path to image encoder>/image_encoder.pth'
 king_percival = percival(in_channels=in_channels, 
                          projection_dim=projection_dim, 
                          img_size=(128, 256, 256))
@@ -157,14 +157,16 @@ diagnostic_results = king_percival.prognostic_inference_all_conditions(img_path=
 ## Available Circulatory System Prognostic Models
 | Diagnosis | Phecode | C-index (95% CI) |
 | :---: | :---: | :---: |
-| Heart failure with preserved EF [Diastolic heart failure] | 428.4 | 0.78 (0.77, 0.80) |
-| Heart failure with reduced EF [Systolic or combined heart failure] | 428.3 | 0.76 (0.74, 0.78) |
+| Aortic aneurysm  | 442.1 | 0.84 (0.81, 0.87) |
+| Heart failure with preserved EF  | 428.4 | 0.78 (0.77, 0.80) |
+| Chronic pulmonary heart disease  | 415.2 | 0.78 (0.75, 0.81) |
+| Heart failure with reduced EF  | 428.3 | 0.76 (0.74, 0.78) |
 | Mitral valve stenosis and aortic valve stenosis | 394.1 | 0.75 (0.73, 0.77) |
 | Hypertensive chronic kidney disease | 401.22 | 0.75 (0.74, 0.77) |
 | Coronary atherosclerosis | 411.4 | 0.74 (0.73, 0.75) |
 | Atrial fibrillation | 427.21 | 0.74 (0.73, 0.75) |
-| Heart failure NOS | 428.2 | 0.74 (0.71, 0.77) |
-| Congestive heart failure (CHF) NOS | 428.1 | 0.73 (0.71, 0.75) |
+| Heart failure  | 428.2 | 0.74 (0.71, 0.77) |
+| Congestive heart failure (CHF)  | 428.1 | 0.73 (0.71, 0.75) |
 | Hypertensive heart disease | 401.21 | 0.73 (0.70, 0.75) |
 | Primary pulmonary hypertension | 415.21 | 0.72 (0.70, 0.73) |
 | Mitral valve disease | 394.2 | 0.71 (0.64, 0.78) |
@@ -175,6 +177,61 @@ diagnostic_results = king_percival.prognostic_inference_all_conditions(img_path=
 
 
 
+## Available Respiratory Prognostic Models
+| Diagnosis | Phecode | C-index (95% CI) |
+| :---: | :---: | :---: |
+| Hypoventilation | 513.3 | 0.87 (0.82, 0.92) |
+| Pseudomonal pneumonia | 480.12 | 0.79 (0.75, 0.84) |
+| Bacterial pneumonia | 480.1 | 0.78 (0.77, 0.79) |
+| Acute upper respiratory infections | 465.0 | 0.74 (0.67, 0.80) |
+| Bronchopneumonia and lung abscess | 480.5 | 0.73 (0.66, 0.81) |
+| Viral pneumonia | 480.2 | 0.72 (0.68, 0.77) |
+| Pneumococcal pneumonia | 480.11 | 0.71 (0.70, 0.73) |
+| Empyema and pneumothorax | 506.0 | 0.69 (0.65, 0.74) |
+| Pneumonia | 480.0 | 0.65 (0.64, 0.66) |
+| Acute sinusitis | 464.0 | 0.61 (0.60, 0.63) |
+
+
+
+## Available Neoplasm Prognostic Models
+| Diagnosis | Phecode | C-index (95% CI) |
+| :---: | :---: | :---: |
+| Malignant neoplasm of the uterus | 182 | 0.85 (0.82, 0.88) |
+| Prostate cancer | 185 | 0.84 (0.83, 0.86) |
+| Esophageal cancer | 157 | 0.84 (0.82, 0.86) |
+| Pancreatic cancer | 153.2 | 0.75 (0.66, 0.83) |
+
+
+
+## Available Endocrine/Metabolic Prognostic Models
+| Diagnosis | Phecode | C-index (95% CI) |
+| :---: | :---: | :---: |
+| Morbid obesity | 278.11 | 0.86 (0.85, 0.87) |
+| Type 2 diabetes with neurological manifestations | 250.24 | 0.76 (0.73, 0.79) |
+| Type 2 diabetes | 250.2 | 0.72 (0.71, 0.73) |
+| Nontoxic multinodular goiter | 241.2 | 0.65 (0.64, 0.67) |
+
+
+## Available Genitourinary Prognostic Models
+| Diagnosis | Phecode | C-index (95% CI) |
+| :---: | :---: | :---: |
+| Premature menopause and other ovarian failure | 627.5 | 0.76 (0.67, 0.85) |
+| Chronic renal failure [CKD] | 585.3 | 0.75 (0.74, 0.75) |
+| Acute renal failure | 585.1 | 0.73 (0.71, 0.76) |
+| Benign neoplasm of breast | 610.4 | 0.71 (0.67, 0.74) |
+| Nephritis and nephropathy with pathological lesion | 580.32 | 0.69 (0.66, 0.72) |
+| Acute glomerulonephritis, NOS | 580.13 | 0.62 (0.53, 0.71) |
+
+
+
+## Available Musculoskeletal Prognostic Models
+| Diagnosis | Phecode | C-index (95% CI) |
+| :---: | :---: | :---: |
+| Senile osteoporosis | 743.12 | 0.77 (0.76, 0.78) |
+| Osteoporosis  | 743.11 | 0.75 (0.74, 0.77) |
+| Pyogenic arthritis | 711.1 | 0.73 (0.67, 0.79) |
+| Osteoarthrosis, localized, primary | 740.11 | 0.70 (0.66, 0.73) |
+| Rheumatoid arthritis | 714.1 | 0.64 (0.59, 0.68) |
 
 
 
