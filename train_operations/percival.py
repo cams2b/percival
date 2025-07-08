@@ -154,10 +154,10 @@ class percival(nn.Module):
 
         return pc_scores
 
-    def diagnostic_inference(self, img_path, device, target_phecode=None):
+    def phenotype_classification_inference(self, img_path, device, target_phecode=None):
         z_img = self.inference_from_path(img_path=img_path, device=device)
         pc = self.compute_principal_components(z_img=z_img)
-        coef_df = pd.read_csv("train_operations/data/diagnosis/diagnosis_model_coefficients.csv") 
+        coef_df = pd.read_csv("train_operations/data/classification/classification_model_coefficients.csv") 
 
         if target_phecode is None:
             raise ValueError("Please specify a target_condition for inference")
@@ -182,10 +182,10 @@ class percival(nn.Module):
             "predicted_label": int(prob >= 0.5)
         }
     
-    def diagnostic_inference_all_conditions(self, img_path, device):
+    def phenotype_classification_inference_all_conditions(self, img_path, device):
         z_img = self.inference_from_path(img_path=img_path, device=device)
         pc = self.compute_principal_components(z_img=z_img)
-        coef_df = pd.read_csv("train_operations/data/diagnosis/diagnosis_model_coefficients.csv") 
+        coef_df = pd.read_csv("train_operations/data/classification/classification_model_coefficients.csv")
 
         # Step 3: Prepare predictions
         results = []
