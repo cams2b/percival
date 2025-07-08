@@ -44,6 +44,7 @@ def prognostication_inference(path):
     ## test code remove before deployment
     df = pd.read_excel('/cbica/home/beechec/research/data/pmbb_xlsx/parsival_400k/pmbb_val.xlsx')
     path = df['img_path'].values[0]
+    print(path)
     ##
     
     img_weights = '/cbica/home/beechec/research/model_weights/foundation_percival/percival_checkpoint/weights/image_encoder_epoch_1_loss_1839.1098633.pth'
