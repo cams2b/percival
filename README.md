@@ -130,7 +130,7 @@ diagnostic_results = king_percival.phenotype_classification_inference_all_condit
 
 
 
-## 🔍 Prognostic risk stratification with Percival
+## 🔮 Prognostic risk stratification with Percival
 *Performance metrics reported below reflect predictions made using imaging data alone, without additional clinical covariates.*
 ```python
 
