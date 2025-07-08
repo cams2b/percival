@@ -22,8 +22,8 @@ The pretrained Percival models were trained on over 400,000 CT volumes paired wi
 
 | Model                   | Download Link                                      | Base Architecture            | Reference                                      |
 |-------------------------|----------------------------------------------------|------------------------------|------------------------------------------------|
-| Percival Image Encoder  | [Download](https://zenodo.org/your-image-encoder-link) | DeiT Small Patch16-224       | [DeiT Paper](https://arxiv.org/abs/2012.12877) / [timm](https://github.com/huggingface/pytorch-image-models?tab=readme-ov-file#models) |
-| Percival Text Encoder   | [Download](https://zenodo.org/your-text-encoder-link)  | Clinical Longformer (BERT)   | [Clinical Longformer](https://huggingface.co/yikuan8/Clinical-Longformer) |
+| Percival Image Encoder  | [Download](https://huggingface.co/cbeeche/percival/tree/main/weights) | DeiT Small Patch16-224       | [DeiT Paper](https://arxiv.org/abs/2012.12877) / [timm](https://github.com/huggingface/pytorch-image-models?tab=readme-ov-file#models) |
+| Percival Text Encoder   | [Download](https://huggingface.co/cbeeche/percival/tree/main/weights)  | Clinical Longformer (BERT)   | [Clinical Longformer](https://huggingface.co/yikuan8/Clinical-Longformer) |
 
 
 
