@@ -212,15 +212,15 @@ class percival(nn.Module):
         return pd.DataFrame(results)
 
     
-    def prognostic_inference(self, img_path, device, target_condition=None):
+    def prognostic_inference(self, img_path, device, target_phecode=None):
         z_img = self.inference_from_path(img_path=img_path, device=device)
         pc = self.compute_principal_components(z_img=z_img)
         coef_df = pd.read_csv("train_operations/data/prognosis/cox_model_coefficients.csv")
 
-        if target_condition is None:
+        if target_phecode is None:
             raise ValueError("Please specify a target condition for inference")
 
-        row = coef_df[coef_df["condition"] == target_condition]
+        row = coef_df[coef_df["phecode"] == target_phecode]
 
         row = row.iloc[0]
         pc_coefs = row[[f"PC{i}" for i in range(1, 11)]].values.astype(np.float32)  # shape: (10,)
@@ -239,7 +239,7 @@ class percival(nn.Module):
 
         return {
             "principal_components": pc,
-            "condition": target_condition,
+            "phecode": target_phecode,
             "linear_predictor": linear_predictor,
             "relative_hazard": relative_hazard,
             "risk_strata": risk_strata
@@ -255,14 +255,14 @@ class percival(nn.Module):
         results = []
 
         for _, row in coef_df.iterrows():
-            condition = row["condition"]
+            phecode = row["phecode"]
             low_risk_threshold = row['low_risk_threshold'].values.astype(np.float32)
             high_risk_threshold = row['high_risk_threshold'].values.astype(np.float32)
 
             try:
                 pc_coefs = row[[f"PC{i}" for i in range(1, 11)]].values.astype(np.float32)
             except KeyError:
-                print(f"[WARNING] PC columns missing for condition: {condition}")
+                print(f"[WARNING] PC columns missing for phecode: {phecode}")
                 continue
 
             linear_predictor = np.dot(pc, pc_coefs.T).item()
@@ -276,7 +276,7 @@ class percival(nn.Module):
                 risk_strata = 'intermediate-risk'
 
             results.append({
-                "condition": condition,
+                "phecode": phecode,
                 "linear_predictor": linear_predictor,
                 "relative_hazard": relative_hazard,
                 "risk_strata": risk_strata
