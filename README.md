@@ -47,7 +47,7 @@ king_percival = percival(in_channels=in_channels,
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 king_percival.to(device)
 king_percival.load_image_encoder(path=img_weights)
-diagnostic_results = king_percival.diagnostic_inference_all_conditions(img_path=img_path, device=device)
+diagnostic_results = king_percival.phenotype_classification_inference_all_conditions(img_path=img_path, device=device)
 
 ```
 ## Circulatory System Disease Phenotype Models
@@ -130,11 +130,56 @@ diagnostic_results = king_percival.diagnostic_inference_all_conditions(img_path=
 
 
 
+## 🔍 Prognostic risk stratification with Percival
+*Performance metrics reported below reflect predictions made using imaging data alone, without additional clinical covariates.*
+```python
+
+import pandas as pd
+import numpy as np
+import SimpleITK as sitk
+import torch
+from train_operations.percival import percival
+
+img_path = '<Path to image (.nii)>'
+in_channels = 1
+projection_dim = 512
+img_weights = '<Path to image encoder>/percival_vision_encoder.pth'
+king_percival = percival(in_channels=in_channels, 
+                         projection_dim=projection_dim, 
+                         img_size=(128, 256, 256))
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+king_percival.to(device)
+king_percival.load_image_encoder(path=img_weights)
+diagnostic_results = king_percival.prognostic_inference_all_conditions(img_path=img_path, device=device)
+
+```
+
+## Available Circulatory System Prognostic Models
+| Diagnosis | Phecode | C-index (95% CI) |
+| :---: | :---: | :---: |
+| Heart failure with preserved EF [Diastolic heart failure] | 428.4 | 0.78 (0.77, 0.80) |
+| Heart failure with reduced EF [Systolic or combined heart failure] | 428.3 | 0.76 (0.74, 0.78) |
+| Mitral valve stenosis and aortic valve stenosis | 394.1 | 0.75 (0.73, 0.77) |
+| Hypertensive chronic kidney disease | 401.22 | 0.75 (0.74, 0.77) |
+| Coronary atherosclerosis | 411.4 | 0.74 (0.73, 0.75) |
+| Atrial fibrillation | 427.21 | 0.74 (0.73, 0.75) |
+| Heart failure NOS | 428.2 | 0.74 (0.71, 0.77) |
+| Congestive heart failure (CHF) NOS | 428.1 | 0.73 (0.71, 0.75) |
+| Hypertensive heart disease | 401.21 | 0.73 (0.70, 0.75) |
+| Primary pulmonary hypertension | 415.21 | 0.72 (0.70, 0.73) |
+| Mitral valve disease | 394.2 | 0.71 (0.64, 0.78) |
+| Essential hypertension | 401.1 | 0.70 (0.70, 0.70) |
+| Disease of tricuspid valve | 394.7 | 0.70 (0.69, 0.72) |
+| Other hypertensive complications | 401.3 | 0.70 (0.69, 0.71) |
+| Unstable angina (intermediate coronary syndrome) | 411.1 | 0.69 (0.68, 0.71) |
+
+
+
+
+
+
 ## Citation
-
 If you find any of the code useful please cite our article
-
-
 ```
 @article {Beeche2025.07.03.25330654,
 	author = {Beeche, Cameron and Kim, Joonghyun and Tavolinejad, Hamed and Zhao, Bingxin and Sharma, Rakesh and Duda, Jeffrey and Gee, James and Dako, Farouk and Verma, Anurag and Morse, Colleen and Hou, Bojian and Shen, Li and Sagreiya, Hersh and Davatzikos, Christos and Damrauer, Scott and Ritchie, Marylyn D. and Rader, Daniel and Long, Qi and Chen, Tianlong and Kahn, Charles E. and Chirinos, Julio and Witschey, Walter R. and Penn Medicine Biobank},

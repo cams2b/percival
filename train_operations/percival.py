@@ -224,8 +224,8 @@ class percival(nn.Module):
 
         row = row.iloc[0]
         pc_coefs = row[[f"PC{i}" for i in range(1, 11)]].values.astype(np.float32)  # shape: (10,)
-        low_risk_threshold = row['low_risk_threshold'].values.astype(np.float32)
-        high_risk_threshold = row['high_risk_threshold'].values.astype(np.float32)
+        low_risk_threshold = np.float32(row['low_risk_threshold'])
+        high_risk_threshold = np.float32(row['high_risk_threshold'])
 
         # Compute linear predictor (LP) and hazard
         linear_predictor = np.dot(pc, pc_coefs.T).item()  # scalar
