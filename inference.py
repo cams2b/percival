@@ -23,7 +23,7 @@ from train_operations.percival import percival
 
 
 def classification_inference(path):
-    img_weights = '/cbica/home/beechec/research/model_weights/foundation_percival/percival_checkpoint/weights/image_encoder_epoch_1_loss_1839.1098633.pth'
+    img_weights = '<path to image encoder weights/image_encoder.pth'
     in_channels = 1
     projection_dim = 512
     img_size = (128, 256, 256)
@@ -41,8 +41,7 @@ def classification_inference(path):
 
 
 def prognostication_inference(path):
-    
-    img_weights = '/cbica/home/beechec/research/model_weights/foundation_percival/percival_checkpoint/weights/image_encoder_epoch_1_loss_1839.1098633.pth'
+    img_weights = '<path to image encoder weights/image_encoder.pth'
     in_channels = 1
     projection_dim = 512
     img_size = (128, 256, 256)
