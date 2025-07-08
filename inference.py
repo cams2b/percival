@@ -23,14 +23,6 @@ from train_operations.percival import percival
 
 
 def classification_inference(path):
-
-    ## test code remove before deployment
-    df = pd.read_excel('/cbica/home/beechec/research/data/pmbb_xlsx/parsival_400k/pmbb_val.xlsx')
-    path = df['img_path'].values[0]
-    print(path)
-    ##
-    
-    
     img_weights = '/cbica/home/beechec/research/model_weights/foundation_percival/percival_checkpoint/weights/image_encoder_epoch_1_loss_1839.1098633.pth'
     in_channels = 1
     projection_dim = 512
@@ -48,12 +40,6 @@ def classification_inference(path):
 
 
 def prognostication_inference(path):
-    
-    ## test code remove before deployment
-    df = pd.read_excel('/cbica/home/beechec/research/data/pmbb_xlsx/parsival_400k/pmbb_val.xlsx')
-    path = df['img_path'].values[0]
-    print(path)
-    ##
     
     img_weights = '/cbica/home/beechec/research/model_weights/foundation_percival/percival_checkpoint/weights/image_encoder_epoch_1_loss_1839.1098633.pth'
     in_channels = 1
@@ -73,8 +59,3 @@ def prognostication_inference(path):
     res_df = king_percival.prognostic_inference_all_conditions(img_path=path, device=device)
 
 
-if __name__ == '__main__':
-    img_path = ''
-    classification_inference(path=img_path)
-    prognostication_inference(path=img_path)
-    print('[INFO] DONE')
