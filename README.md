@@ -31,207 +31,53 @@ The pretrained Percival models were trained on over 400,000 CT volumes paired wi
 *Performance metrics reported below reflect predictions made using imaging data alone, without additional clinical covariates.*
 ```python
 
-import pandas as pd
-import numpy as np
-import SimpleITK as sitk
-import torch
-from train_operations.percival import percival
+from train_operations.classification_model import inference_model
 
-img_path = '<Path to image (.nii)>'
-in_channels = 1
+print('[INFO] performing classification')
+img_weights = '<path to image weights>/image_encoder.pth'
+lang_weights = '<path to language weights>/language_encoder.pth'
+image_size = (256, 256, 128)
+target_spacing = (1.5, 1.5, 3)
 projection_dim = 512
-img_weights = '<Path to image encoder>/image_encoder.pth'
-king_percival = percival(in_channels=in_channels, 
-                         projection_dim=projection_dim, 
-                         img_size=(128, 256, 256))
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-king_percival.to(device)
-king_percival.load_image_encoder(path=img_weights)
-diagnostic_results = king_percival.phenotype_classification_inference_all_conditions(img_path=img_path, device=device)
+in_channels = 1
+vision_model_size = 'small'
+model = inference_model(vision_model_size=vision_model_size,
+						in_channels=in_channels,
+						projection_dim=projection_dim,
+						image_size=image_size,
+						target_spacing=target_spacing,
+						img_weights=img_weights,
+						lang_weights=lang_weights)
+
+results, summary = model.diagnostic_inference_all_conditions(img_path='<path to image>.nii')
 
 ```
-## Circulatory System Disease Phenotype Models
-| Description                                                        |   Phecode | 5-fold AUROC (95% CI)   |
-|:-------------------------------------------------------------------|----------:|:------------------------|
-| Heart failure with preserved EF [Diastolic heart failure]          |    428.4  | 0.82 (0.79, 0.86)       |
-| Hypertensive heart disease                                         |    401.21 | 0.82 (0.79, 0.84)       |
-| Heart failure with reduced EF [Systolic or combined heart failure] |    428.3  | 0.80 (0.77, 0.83)       |
-| Heart failure                                                      |    428.2  | 0.79 (0.76, 0.83)       |
-| Congestive heart failure (CHF)                                     |    428.1  | 0.79 (0.77, 0.80)       |
-| Coronary atherosclerosis                                           |    411.4  | 0.79 (0.78, 0.80)       |
-| Paroxysmal ventricular tachycardia                                 |    427.12 | 0.79 (0.76, 0.81)       |
-| Atrial fibrillation                                                |    427.21 | 0.78 (0.76, 0.80)       |
-| Cardiomegaly                                                       |    416    | 0.78 (0.76, 0.79)       |
-| Essential hypertension                                             |    401.1  | 0.77 (0.76, 0.78)       |
-| Primary/intrinsic cardiomyopathies                                 |    425.1  | 0.77 (0.74, 0.80)       |
-| Angina pectoris                                                    |    411.3  | 0.74 (0.72, 0.75)       |
-| Nonspecific chest pain                                             |    418    | 0.72 (0.69, 0.75)       |
-| Arrhythmia (cardiac)                                               |    427.5  | 0.70 (0.68, 0.72)       |
-| Palpitations                                                       |    427.9  | 0.67 (0.65, 0.69)       |
-
-
-## Respiratory Disease Phenotype Models
-| Description                                                 |   Phecode | 5-fold AUROC (95% CI)   |
-|:------------------------------------------------------------|----------:|:------------------------|
-| Pleurisy; pleural effusion                                  |    507    | 0.79 (0.77, 0.80)       |
-| Pulmonary collapse; interstitial and compensatory emphysema |    508    | 0.77 (0.75, 0.78)       |
-| Empyema and pneumothorax                                    |    506    | 0.75 (0.71, 0.79)       |
-| Pneumococcal pneumonia                                      |    480.11 | 0.75 (0.69, 0.82)       |
-| Pneumonia                                                   |    480    | 0.74 (0.72, 0.75)       |
-| Abnormal findings examination of lungs                      |    514    | 0.73 (0.71, 0.76)       |
-| Shortness of breath                                         |    512.7  | 0.72 (0.71, 0.74)       |
-| Postinflammatory pulmonary fibrosis                         |    502    | 0.68 (0.65, 0.71)       |
-| Cough                                                       |    512.8  | 0.68 (0.65, 0.70)       |
-| Asthma                                                      |    495    | 0.63 (0.60, 0.66)       |
-
-
-## Endocrine/Metabolic Disease Phenotype Models
-| Description                                      |   Phecode | 5-fold AUROC (95% CI)   |
-|:-------------------------------------------------|----------:|:------------------------|
-| Morbid obesity                                   |    278.11 | 0.90 (0.87, 0.94)       |
-| Obesity                                          |    278.1  | 0.86 (0.86, 0.87)       |
-| Gout                                             |    274.1  | 0.77 (0.74, 0.81)       |
-| Type 2 diabetes                                  |    250.2  | 0.75 (0.73, 0.76)       |
-| Polyneuropathy in diabetes                       |    250.6  | 0.74 (0.65, 0.83)       |
-| Type 2 diabetes with neurological manifestations |    250.24 | 0.73 (0.65, 0.82)       |
-| Hypopotassemia                                   |    276.14 | 0.73 (0.72, 0.74)       |
-| Hypovolemia                                      |    276.5  | 0.71 (0.68, 0.73)       |
-| Hypercholesterolemia                             |    272.11 | 0.66 (0.63, 0.69)       |
-| Nontoxic multinodular goiter                     |    241.2  | 0.64 (0.58, 0.70)       |
-
-
-## Genitourinary Disease Phenotype Models
-| Description                                                                     |   Phecode | 5-fold AUROC (95% CI)   |
-|:--------------------------------------------------------------------------------|----------:|:------------------------|
-| Hyperplasia of prostate                                                         |     600   | 0.83 (0.81, 0.85)       |
-| Chronic renal failure [CKD]                                                     |     585.3 | 0.80 (0.80, 0.81)       |
-| Acute renal failure                                                             |     585.1 | 0.79 (0.77, 0.81)       |
-| Renal failure                                                                   |     585.2 | 0.75 (0.71, 0.79)       |
-| Calculus of kidney                                                              |     594.1 | 0.75 (0.72, 0.77)       |
-| Ovarian cyst                                                                    |     628   | 0.70 (0.67, 0.73)       |
-| Chronic kidney disease, Stage I or II                                           |     585.4 | 0.70 (0.66, 0.74)       |
-| Disorders of menstruation and other abnormal bleeding from female genital tract |     626   | 0.69 (0.64, 0.74)       |
-| Elevated prostate specific antigen [PSA]                                        |     796   | 0.62 (0.56, 0.68)       |
-
-
-## Musculoskeletal Disease Phenotype Models
-| Description                                        |   Phecode | 5-fold AUROC (95% CI)   |
-|:---------------------------------------------------|----------:|:------------------------|
-| Senile osteoporosis                                |    743.12 | 0.81 (0.80, 0.82)       |
-| Osteoporosis                                       |    743.11 | 0.80 (0.78, 0.83)       |
-| Osteoarthrosis                                     |    740.9  | 0.75 (0.74, 0.76)       |
-| Osteoarthritis; localized                          |    740.1  | 0.75 (0.75, 0.76)       |
-| Symptoms and disorders of the joints               |    741    | 0.72 (0.68, 0.77)       |
-| Pain in joint                                      |    745    | 0.68 (0.64, 0.73)       |
-| Osteopenia or other disorder of bone and cartilage |    743.9  | 0.66 (0.65, 0.68)       |
-| Rheumatoid arthritis                               |    714.1  | 0.66 (0.62, 0.69)       |
-| Spondylosis without myelopathy                     |    721.1  | 0.64 (0.60, 0.68)       |
-| Arthropathy                                        |    716.9  | 0.60 (0.52, 0.68)       |
-
 
 
 ## 🔮 Prognostic risk stratification with Percival
 *Performance metrics reported below reflect predictions made using imaging data alone, without additional clinical covariates.*
 ```python
 
-import pandas as pd
-import numpy as np
-import SimpleITK as sitk
-import torch
-from train_operations.percival import percival
+from train_operations.classification_model import inference_model
 
-img_path = '<Path to image (.nii)>'
-in_channels = 1
+img_weights = '<path to image weights>/image_encoder.pth'
+lang_weights = '<path to language weights>/language_encoder.pth'
+image_size = (256, 256, 128)
+target_spacing = (1.5, 1.5, 3)
 projection_dim = 512
-img_weights = '<Path to image encoder>/image_encoder.pth'
-king_percival = percival(in_channels=in_channels, 
-                         projection_dim=projection_dim, 
-                         img_size=(128, 256, 256))
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-king_percival.to(device)
-king_percival.load_image_encoder(path=img_weights)
-diagnostic_results = king_percival.prognostic_inference_all_conditions(img_path=img_path, device=device)
+in_channels = 1
+vision_model_size = 'small'
+model = inference_model(vision_model_size=vision_model_size,
+						in_channels=in_channels,
+						projection_dim=projection_dim,
+						image_size=image_size,
+						target_spacing=target_spacing,
+						img_weights=img_weights,
+						lang_weights=lang_weights)
+
+results, summary = model.prognostic_inference_all_conditions(img_path='<path to image>.nii')
 
 ```
-
-## Available Circulatory System Prognostic Models
-| Diagnosis | Phecode | C-index (95% CI) |
-| :---: | :---: | :---: |
-| Aortic aneurysm  | 442.1 | 0.84 (0.81, 0.87) |
-| Heart failure with preserved EF  | 428.4 | 0.78 (0.77, 0.80) |
-| Chronic pulmonary heart disease  | 415.2 | 0.78 (0.75, 0.81) |
-| Heart failure with reduced EF  | 428.3 | 0.76 (0.74, 0.78) |
-| Mitral valve stenosis and aortic valve stenosis | 394.1 | 0.75 (0.73, 0.77) |
-| Hypertensive chronic kidney disease | 401.22 | 0.75 (0.74, 0.77) |
-| Coronary atherosclerosis | 411.4 | 0.74 (0.73, 0.75) |
-| Atrial fibrillation | 427.21 | 0.74 (0.73, 0.75) |
-| Heart failure  | 428.2 | 0.74 (0.71, 0.77) |
-| Congestive heart failure (CHF)  | 428.1 | 0.73 (0.71, 0.75) |
-| Hypertensive heart disease | 401.21 | 0.73 (0.70, 0.75) |
-| Primary pulmonary hypertension | 415.21 | 0.72 (0.70, 0.73) |
-| Mitral valve disease | 394.2 | 0.71 (0.64, 0.78) |
-| Essential hypertension | 401.1 | 0.70 (0.70, 0.70) |
-| Disease of tricuspid valve | 394.7 | 0.70 (0.69, 0.72) |
-| Other hypertensive complications | 401.3 | 0.70 (0.69, 0.71) |
-| Unstable angina (intermediate coronary syndrome) | 411.1 | 0.69 (0.68, 0.71) |
-
-
-
-## Available Respiratory Prognostic Models
-| Diagnosis | Phecode | C-index (95% CI) |
-| :---: | :---: | :---: |
-| Hypoventilation | 513.3 | 0.87 (0.82, 0.92) |
-| Pseudomonal pneumonia | 480.12 | 0.79 (0.75, 0.84) |
-| Bacterial pneumonia | 480.1 | 0.78 (0.77, 0.79) |
-| Acute upper respiratory infections | 465.0 | 0.74 (0.67, 0.80) |
-| Bronchopneumonia and lung abscess | 480.5 | 0.73 (0.66, 0.81) |
-| Viral pneumonia | 480.2 | 0.72 (0.68, 0.77) |
-| Pneumococcal pneumonia | 480.11 | 0.71 (0.70, 0.73) |
-| Empyema and pneumothorax | 506.0 | 0.69 (0.65, 0.74) |
-| Pneumonia | 480.0 | 0.65 (0.64, 0.66) |
-| Acute sinusitis | 464.0 | 0.61 (0.60, 0.63) |
-
-
-
-## Available Neoplasm Prognostic Models
-| Diagnosis | Phecode | C-index (95% CI) |
-| :---: | :---: | :---: |
-| Malignant neoplasm of the uterus | 182 | 0.85 (0.82, 0.88) |
-| Prostate cancer | 185 | 0.84 (0.83, 0.86) |
-| Esophageal cancer | 157 | 0.84 (0.82, 0.86) |
-| Pancreatic cancer | 153.2 | 0.75 (0.66, 0.83) |
-
-
-
-## Available Endocrine/Metabolic Prognostic Models
-| Diagnosis | Phecode | C-index (95% CI) |
-| :---: | :---: | :---: |
-| Morbid obesity | 278.11 | 0.86 (0.85, 0.87) |
-| Type 2 diabetes with neurological manifestations | 250.24 | 0.76 (0.73, 0.79) |
-| Type 2 diabetes | 250.2 | 0.72 (0.71, 0.73) |
-| Nontoxic multinodular goiter | 241.2 | 0.65 (0.64, 0.67) |
-
-
-## Available Genitourinary Prognostic Models
-| Diagnosis | Phecode | C-index (95% CI) |
-| :---: | :---: | :---: |
-| Premature menopause and other ovarian failure | 627.5 | 0.76 (0.67, 0.85) |
-| Chronic renal failure [CKD] | 585.3 | 0.75 (0.74, 0.75) |
-| Acute renal failure | 585.1 | 0.73 (0.71, 0.76) |
-| Benign neoplasm of breast | 610.4 | 0.71 (0.67, 0.74) |
-| Nephritis and nephropathy with pathological lesion | 580.32 | 0.69 (0.66, 0.72) |
-| Acute glomerulonephritis, NOS | 580.13 | 0.62 (0.53, 0.71) |
-
-
-
-## Available Musculoskeletal Prognostic Models
-| Diagnosis | Phecode | C-index (95% CI) |
-| :---: | :---: | :---: |
-| Senile osteoporosis | 743.12 | 0.77 (0.76, 0.78) |
-| Osteoporosis  | 743.11 | 0.75 (0.74, 0.77) |
-| Pyogenic arthritis | 711.1 | 0.73 (0.67, 0.79) |
-| Osteoarthrosis, localized, primary | 740.11 | 0.70 (0.66, 0.73) |
-| Rheumatoid arthritis | 714.1 | 0.64 (0.59, 0.68) |
 
 
 

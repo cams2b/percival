@@ -14,8 +14,6 @@
 # limitations under the License.
 
 
-
-
 import torch
 import torch.nn as nn
 from torch.nn import Conv3d, LayerNorm
@@ -26,7 +24,7 @@ import time
 class PatchEmbed3D(PatchEmbed):
     """Patch Embedding Layer for 3D Data"""
 
-    def __init__(self, img_size=(256, 512, 512), patch_size=(64, 64, 64), in_chans=1, embed_dim=1024):
+    def __init__(self, img_size=(128, 256, 256), patch_size=(64, 64, 64), in_chans=1, embed_dim=1024):
         super().__init__(img_size=img_size, patch_size=patch_size, in_chans=in_chans, embed_dim=embed_dim)
         self.proj = Conv3d(
             in_chans,
@@ -34,6 +32,7 @@ class PatchEmbed3D(PatchEmbed):
             kernel_size=patch_size,
             stride=patch_size
         )
+        # self.norm = LayerNorm(embed_dim)
         self.norm = LayerNorm(embed_dim, eps=1e-6)
 
     def forward(self, x):
@@ -47,10 +46,23 @@ class PatchEmbed3D(PatchEmbed):
 class VisionTransformer3D(nn.Module):
     """Vision Transformer for 3D Input"""
 
-    def __init__(self, img_size=(256, 512, 512), patch_size=(64, 64, 64), in_chans=1, num_classes=512):
+    def __init__(self, img_size=(128, 256, 256), patch_size=(64, 64, 64), in_chans=1, num_classes=512, model_size='small'):
         super().__init__()
-        self.base_model = timm.create_model("deit_small_patch16_224", pretrained=True)
         
+        if model_size == 'tiny':
+            print('[INFO] initializing with tiny ViT...')
+            self.base_model = timm.create_model("hf_hub:timm/deit_tiny_patch16_224.fb_in1k", pretrained=True)
+        if model_size == 'small':
+            print('[INFO] initializing with small ViT...')
+            self.base_model = timm.create_model("deit_small_patch16_224", pretrained=True)
+        if model_size == 'base':
+            print('[INFO] initializing with base ViT...')
+            self.base_model = timm.create_model("hf_hub:timm/deit3_base_patch16_224.fb_in1k", pretrained=True)
+        if model_size == 'huge':
+            print('[INFO] initializing with huge ViT...')
+            self.base_model = timm.create_model('deit3_huge_patch14_224.fb_in1k', pretrained=True)
+
+        print('[INFO] initialization complete')
         # Replace the patch embedding with 3D patch embedding
         self.base_model.patch_embed = PatchEmbed3D(
             img_size=img_size,
@@ -69,16 +81,20 @@ class VisionTransformer3D(nn.Module):
 
         # Replace the classification head
         self.base_model.head = nn.Linear(self.base_model.head.in_features, num_classes)
+        
+        
 
     def forward(self, x, output_hidden_states=False):
         B = x.size(0)
         x = self.base_model.patch_embed(x)  # Apply 3D patch embedding, shape: (B, N, C)
-
+        
         # Prepare CLS token
         cls_tokens = self.base_model.cls_token.expand(B, -1, -1)  # Shape: (B, 1, C)
 
+        
         # Concatenate CLS token to patch embeddings
         x = torch.cat((cls_tokens, x), dim=1)  # Shape: (B, N+1, C)
+        
         x = x + self.base_model.pos_embed  # Shape: (B, N+1, C)
         x = self.base_model.pos_drop(x)  # Apply dropout
 
