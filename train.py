@@ -1,9 +1,5 @@
-import pandas as pd
-import torch
 from train_operations.percival_trainer import percival_trainer
 from train_operations.percival import percival
-from train_operations.classification_model import inference_model
-import random
 
 def train():
     experiment_name = 'percival_huge'

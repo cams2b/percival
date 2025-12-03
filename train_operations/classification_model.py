@@ -52,10 +52,10 @@ class inference_model(nn.Module):
                  target_spacing:tuple=(1.5, 1.5, 3),
                  img_weights:str=None, 
                  lang_weights:str=None,
-                 classification_coef_path:str="percival_train_operations/data/classification/classification_coefs.xlsx",
-                 prognostication_coef_path:str="percival_train_operations/data/prognosis/prognostic_coefs.xlsx",
-                 pc_center_scale_path:str='percival_train_operations/data/pca_center_scale.csv',
-                 pc_rotation_path:str='percival_train_operations/data/pca_rotation_matrix.csv'
+                 classification_coef_path:str="train_operations/data/classification/classification_coefs.xlsx",
+                 prognostication_coef_path:str="train_operations/data/prognosis/prognostic_coefs.xlsx",
+                 pc_center_scale_path:str='train_operations/data/pca_center_scale.csv',
+                 pc_rotation_path:str='train_operations/data/pca_rotation_matrix.csv'
                  ):
         super().__init__()
         self.vision_model_size = vision_model_size
@@ -95,7 +95,7 @@ class inference_model(nn.Module):
                      language_model=self.language_model,
                      img_size=self.image_size,
                      vision_model_size=self.vision_model_size)
-        print('ORIGINAL DEVICE')
+        
         self.model.to(self.device)
         print('[INFO] success')
     
@@ -139,11 +139,11 @@ class inference_model(nn.Module):
         description = row['description']
         threshold = row['threshold']
 
-        pc_coefs = row[[f"PC{i}" for i in range(1, 11)]].values.astype(np.float32)  # shape: (10,)
+        pc_coefs = row[[f"PC{i}" for i in range(1, 11)]].values.astype(np.float32)
 
         # Step 4: Compute logits and probability
-        logits = np.dot(pc, pc_coefs.T) + intercept  # shape: (1,)
-        prob = expit(logits[0])  # scalar
+        logits = np.dot(pc, pc_coefs.T) + intercept
+        prob = expit(logits[0])
 
         return {
             "principal_components": pc,
@@ -165,7 +165,6 @@ class inference_model(nn.Module):
             intercept = row["(Intercept)"]
             threshold = row['threshold']
 
-            # threshold = row["threshold"]   # if you add custom thresholds per condition
 
             try:
                 pc_coefs = row[[f"PC{i}" for i in range(1, 11)]].values.astype(np.float32)
@@ -177,7 +176,6 @@ class inference_model(nn.Module):
             logit = np.dot(pc, pc_coefs.T) + intercept
             prob = float(expit(logit[0]))
 
-            #predicted_label = 1 if prob >= 0.5 else 0
             predicted_label = 1 if prob >= threshold else 0
 
             results.append({
