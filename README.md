@@ -9,6 +9,14 @@ Percival is a large-scale vision–language foundation model for three-dimension
 
 ![Key Graphic](images/percival.png)
 
+### This repository provides:
+
+- **Pretrained model weights**
+- **Inference utilities** for generating CT embeddings
+- **Reference scripts** for probing biological and clinical information encoded in the latent space
+- **Example workflows** for downstream diagnostic and prognostic modeling
+
+Percival is designed to support research in multimodal representation learning, disease phenotype alignment, and the characterization of biological signals captured by CT-based foundation models.
 
 ## 🧪 Environment setup
 To create and activate the conda (percival) environment:
