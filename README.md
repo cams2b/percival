@@ -19,7 +19,9 @@ Percival is a large-scale vision–language foundation model for three-dimension
 Percival is designed to support research in multimodal representation learning, disease phenotype alignment, and the characterization of biological signals captured by CT-based foundation models.
 
 ## 🧪 Environment setup
-To create and activate the conda (percival) environment:
+To create and activate the `percival` conda environment, first install 
+[Miniconda](https://www.anaconda.com/docs/getting-started/miniconda/install).  
+Then run:
 ```bash
 conda env create -f environment.yml
 conda activate percival
@@ -37,7 +39,7 @@ The pretrained Percival model were trained on over 400,000 CT volumes paired wit
 
 
 
-## Extraction of principal component and latent features using Percival
+## 🧬 Extraction of principal component and latent features using Percival
 ```python
 
 from train_operations.classification_model import inference_model
