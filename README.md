@@ -30,7 +30,7 @@ conda activate percival
 
 
 ## Pretrained Models
-The pretrained Percival model were trained on over 400,000 CT volumes paired with radiology reports from more than 50,000 PMBB participants. These models cover multiple anatomical regions and imaging protocols.
+The pretrained Percival model was trained on over 400,000 CT volumes paired with radiology reports from more than 50,000 PMBB participants, covering multiple anatomical regions and imaging protocols.
 
 | Model                   | Download Link                                      | Base Architecture            | Reference                                      |
 |-------------------------|----------------------------------------------------|------------------------------|------------------------------------------------|
