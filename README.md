@@ -3,7 +3,8 @@
 [![medRxiv](https://img.shields.io/badge/medRxiv-10.1101%2F2025.07.03.25330654-0077cc?style=flat)](https://www.medrxiv.org/content/10.1101/2025.07.03.25330654v1) ![PyPI - Python Version](https://img.shields.io/badge/python-3.10-blue)
  [![Hugging Face](https://huggingface.co/datasets/huggingface/badges/resolve/main/model-on-hf-sm.svg)](https://huggingface.co/cbeeche/percival) 
 
-Code repository for Percival: a generalizable vision language foundation model for computed tomography
+### Code repository for Percival: a generalizable vision language foundation model for computed tomography.
+
 Percival is a large-scale vision–language foundation model for three-dimensional computed tomography (CT), trained on more than 400,000 CT–report pairs from the Penn Medicine BioBank (PMBB). This repository provides pretrained model weights, inference utilities, and reference scripts for probing biological and clinical information encoded in CT-derived representations. The codebase is designed to support research in multimodal representation learning, disease phenotype alignment, and downstream diagnostic and prognostic modeling.
 
 ![Key Graphic](images/percival.png)
