@@ -153,6 +153,11 @@ class inference_model(nn.Module):
             "predicted_label": int(prob >= threshold) 
         }
     
+    def extract_latent_components(self, img_path):
+        z_img = self.inference_from_path(img_path=img_path)
+        pc = self.compute_principal_components(z_img=z_img)
+
+        return z_img, pc
 
     def diagnostic_inference_all_conditions(self, img_path):
         z_img = self.inference_from_path(img_path=img_path)

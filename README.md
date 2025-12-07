@@ -4,6 +4,7 @@
  [![Hugging Face](https://huggingface.co/datasets/huggingface/badges/resolve/main/model-on-hf-sm.svg)](https://huggingface.co/cbeeche/percival) 
 
 Code repository for Percival: a generalizable vision language foundation model for computed tomography
+Percival is a large-scale vision–language foundation model for three-dimensional computed tomography (CT), trained on more than 400,000 CT–report pairs from the Penn Medicine BioBank (PMBB). This repository provides pretrained model weights, inference utilities, and reference scripts for probing biological and clinical information encoded in CT-derived representations. The codebase is designed to support research in multimodal representation learning, disease phenotype alignment, and downstream diagnostic and prognostic modeling.
 
 ![Key Graphic](images/percival.png)
 
@@ -18,7 +19,7 @@ conda activate percival
 
 
 ## Pretrained Models
-The pretrained Percival models were trained on over 400,000 CT volumes paired with radiology reports from more than 50,000 Penn Medicine BioBank (PMBB) participants. These models cover multiple anatomical regions and imaging protocols.
+The pretrained Percival model were trained on over 400,000 CT volumes paired with radiology reports from more than 50,000 PMBB participants. These models cover multiple anatomical regions and imaging protocols.
 
 | Model                   | Download Link                                      | Base Architecture            | Reference                                      |
 |-------------------------|----------------------------------------------------|------------------------------|------------------------------------------------|
@@ -27,13 +28,36 @@ The pretrained Percival models were trained on over 400,000 CT volumes paired wi
 
 
 
-## 🔍 Disease Phenotype Classification with Percival
-*Performance metrics reported below reflect predictions made using imaging data alone, without additional clinical covariates.*
+## Extraction of principal component and latent features using Percival
 ```python
 
 from train_operations.classification_model import inference_model
 
-print('[INFO] performing classification')
+img_weights = '<path to image weights>/image_encoder.pth'
+lang_weights = '<path to language weights>/language_encoder.pth'
+image_size = (256, 256, 128)
+target_spacing = (1.5, 1.5, 3)
+projection_dim = 512
+in_channels = 1
+vision_model_size = 'small'
+model = inference_model(vision_model_size=vision_model_size,
+						in_channels=in_channels,
+						projection_dim=projection_dim,
+						image_size=image_size,
+						target_spacing=target_spacing,
+						img_weights=img_weights,
+						lang_weights=lang_weights)
+
+z_img, pc = model.extract_latent_components(img_path='<path to image>.nii')
+
+```
+
+
+## 🔍 Disease Phenotype Classification with Percival
+```python
+
+from train_operations.classification_model import inference_model
+
 img_weights = '<path to image weights>/image_encoder.pth'
 lang_weights = '<path to language weights>/language_encoder.pth'
 image_size = (256, 256, 128)
@@ -55,7 +79,6 @@ results, summary = model.diagnostic_inference_all_conditions(img_path='<path to 
 
 
 ## 🔮 Prognostic risk stratification with Percival
-*Performance metrics reported below reflect predictions made using imaging data alone, without additional clinical covariates.*
 ```python
 
 from train_operations.classification_model import inference_model
@@ -79,6 +102,8 @@ results, summary = model.prognostic_inference_all_conditions(img_path='<path to 
 
 ```
 
+## Acknowledgements
+We thank the authors of [Merlin](https://github.com/StanfordMIMI/Merlin/tree/main), and [CT-CLIP](https://github.com/ibrahimethemhamamci/CT-CLIP) for their valuable open-source contributions that significantly influenced this work.
 
 
 ## Citation
