@@ -121,16 +121,16 @@ We thank the authors of [Merlin](https://github.com/StanfordMIMI/Merlin/tree/mai
 If you find any of the code useful please cite our article
 ```
 @article {Beeche2025.07.03.25330654,
-	author = {Beeche, Cameron and Kim, Joonghyun and Tavolinejad, Hamed and Zhao, Bingxin and Sharma, Rakesh and Duda, Jeffrey and Gee, James and Dako, Farouk and Verma, Anurag and Morse, Colleen and Hou, Bojian and Shen, Li and Sagreiya, Hersh and Davatzikos, Christos and Damrauer, Scott and Ritchie, Marylyn D. and Rader, Daniel and Long, Qi and Chen, Tianlong and Kahn, Charles E. and Chirinos, Julio and Witschey, Walter R. and Penn Medicine Biobank},
-	title = {A Pan-Organ Vision-Language Model for Generalizable 3D CT Representations},
+	author = {Beeche, Cameron A and Kim, Joonghyun and Tavolinejad, Hamed and Zhao, Bingxin and Sharma, Rakesh and Duda, Jeffrey and Gee, James and Dako, Farouk and Verma, Anurag and Morse, Colleen and Hou, Bojian and Shen, Li and Sagreiya, Hersh and Davatzikos, Christos and Damrauer, Scott M. and Shad, Rohan and Ritchie, Marylyn D and Rader, Daniel J and Long, Qi and Eaton, Eric and Chen, Tianlong and Kahn, Charles E and Chirinos, Julio A and Witschey, Walter R and Penn Medicine Biobank},
+	title = {Generalizable CT Vision-Language Modeling for Population Health and Disease Risk},
 	elocation-id = {2025.07.03.25330654},
-	year = {2025},
+	year = {2026},
 	doi = {10.1101/2025.07.03.25330654},
 	publisher = {Cold Spring Harbor Laboratory Press},
-	issn = {3067-2007},
-	URL = {https://www.medrxiv.org/content/early/2025/07/03/2025.07.03.25330654},
-	eprint = {https://www.medrxiv.org/content/early/2025/07/03/2025.07.03.25330654.full.pdf},
+	URL = {https://www.medrxiv.org/content/early/2026/01/26/2025.07.03.25330654},
+	eprint = {https://www.medrxiv.org/content/early/2026/01/26/2025.07.03.25330654.full.pdf},
 	journal = {medRxiv}
 }
+
 
 ```
