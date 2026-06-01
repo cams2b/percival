@@ -113,8 +113,8 @@ slurm-*.err
 # HuggingFace cache (if anyone runs HF in-repo)
 # ============================================================
 .cache/
+*.claude
 hf_cache/
-
 
 # ============================================================
 # Generated outputs from demo / inference runs

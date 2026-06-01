@@ -1,0 +1,57 @@
+experiment:
+  name: augreg_tiny_v0
+  output_path: <your_output_dir>
+
+data:
+  train_path: <your_pmbb_data_dir>/train_ct_all.json
+  validation_path: <your_pmbb_data_dir>/val_ct_all.json
+  data_format: pth
+  load_method: medrs
+  txt_format: report
+
+model:
+  name: percival
+  in_channels: 1
+  projection_dim: 192
+  patch_size: [8, 16, 16]
+  image_size: [352, 352, 128]
+  image_spacing: [1.5, 1.5, 3]
+  use_target_spacing: false
+  vision_model_size: tiny
+  vision_pretrain: augreg
+
+  # Language tower
+  language_model: microsoft/BiomedVLP-CXR-BERT-specialized
+  freeze_language_model: false
+
+  # Loss
+  use_distributed_loss: true
+  loss_type: clip
+
+training:
+  epochs: 16
+  batch_size: 48
+  learning_rate: 5.0e-5
+  weight_decay: 0.01
+  scheduler: warmupcosine
+  static_lr: false
+  warmup_ratio: 0.04
+  grad_clip: 1.0
+  use_amp: true
+  accumulation_steps: 1
+  num_workers: 8
+  pin_memory: true
+  validation_batches: 9999999999
+  train_transform: false
+  continue_training: true
+  distributed: true
+
+weights:
+  image_weights: null
+  language_weights: null
+  load_strict: false
+
+wandb:
+  enabled: true
+  project: <your-wandb-project>
+  entity: <your-wandb-entity>

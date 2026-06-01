@@ -1,91 +1,81 @@
-from train_operations.percival_trainer import percival_trainer
-from train_operations.percival import percival
+import yaml
+import argparse
+from train_operations.percival_trainer_wandb import percival_trainer
+from train_operations.percival import Percival
 
-def train():
-    experiment_name = 'percival_huge'
-    train_path = '<path to training data>/train.xlsx'
-    validation_path = '<path to validation data >/validation.xlsx'
-    output_path = '<output path for model weights and results>/'
-    patient_id = '<patient ID column>'
-    image_col = '<image path columns. data should be in .nii format>'
-    text_col = '<text path columns. data should be in .txt format>'
-    projection_dim = 512
-    num_workers = 10
-    epochs = 20
-    learning_rate = 1e-5
-    batch_size = 64
-    grad_clip = 1
-    image_size = (256, 256, 128)
-    image_spacing = (1.5, 1.5, 3)
-    patch_size = (64, 64, 64)
-    in_channels = 1
-    warmup_ratio = 0.1
-    language_model = 'yikuan8/Clinical-Longformer'
-    vision_model_size = 'huge'
-    img_weights = None
-    lang_weights = None
-    train_transform = False
-    continue_training = False
-    pin_mem = True
-    use_amp = True
-    scheduler = 'warmupcosine'
-    static_lr = False
-    strict = False
-    distributed = True
-    sanitize = False
-    config = locals()
 
-    
-    model = percival(name='percival',
-                     in_channels=in_channels,
-                     projection_dim=projection_dim,
-                     patch_size=patch_size,
-                     language_model=language_model,
-                     img_size=image_size,
-                     vision_model_size=vision_model_size)
-        
-    
-    trainer = percival_trainer(model=model,
-                               experiment_name=experiment_name, 
-                               training_path=train_path,
-                               validation_path=validation_path,
-                               train_transform=train_transform,
-                               patient_id=patient_id,
-                               image_col=image_col,
-                               text_col=text_col,
-                               image_size=image_size,
-                               image_spacing=image_spacing,
-                               in_channels=in_channels,
-                               projection_dim=projection_dim, 
-                               language_model=language_model,
-                               epochs=epochs,
-                               batch_size=batch_size,
-                               scheduler=scheduler,
-                               static_lr=static_lr,
-                               warmup_ratio=warmup_ratio,
-                               optimizer_lr=learning_rate,
-                               output_path=output_path,
-                               sanitize=sanitize,
-                               num_workers=num_workers, 
-                               pin_memory=pin_mem,
-                               load_strict=strict,
-                               continue_training=continue_training,
-                               image_weights=img_weights,
-                               language_weights=lang_weights,
-                               use_amp=use_amp,
-                               max_grad_norm=grad_clip,
-                               distributed=distributed,
-                               config=config)
+def train(config_path: str):
+    with open(config_path, 'r') as f:
+        cfg = yaml.safe_load(f)
+
+    exp = cfg['experiment']
+    data = cfg['data']
+    mdl = cfg['model']
+    trn = cfg['training']
+    wts = cfg['weights']
+    wb = cfg['wandb']
+
+    model = Percival(
+        name=mdl['name'],
+        in_channels=mdl['in_channels'],
+        projection_dim=mdl['projection_dim'],
+        patch_size=tuple(mdl['patch_size']),
+        img_size=tuple(mdl['image_size']),
+        language_model=mdl.get('language_model', 'microsoft/BiomedVLP-CXR-BERT-specialized'),
+        vision_model_size=mdl['vision_model_size'],
+        vision_pretrain=mdl.get('vision_pretrain', 'augreg'),
+        freeze_language_model=mdl.get('freeze_language_model', False),
+        use_distributed_loss=mdl.get('use_distributed_loss', False),
+        loss_type=mdl.get('loss_type', 'clip'),
+    )
+
+    trainer = percival_trainer(
+        model=model,
+        experiment_name=exp['name'],
+        training_path=data['train_path'],
+        validation_path=data['validation_path'],
+        train_transform=trn['train_transform'],
+        image_size=tuple(mdl['image_size']),
+        image_spacing=tuple(mdl.get('image_spacing', [1.5, 1.5, 3])),
+        use_target_spacing=mdl.get('use_target_spacing', False),
+        in_channels=mdl['in_channels'],
+        projection_dim=mdl['projection_dim'],
+        language_model=mdl['language_model'],
+        epochs=trn['epochs'],
+        batch_size=trn['batch_size'],
+        scheduler=trn['scheduler'],
+        static_lr=trn['static_lr'],
+        warmup_ratio=trn['warmup_ratio'],
+        validation_batches=trn['validation_batches'],
+        optimizer_lr=trn['learning_rate'],
+        output_path=exp['output_path'],
+        num_workers=trn['num_workers'],
+        pin_memory=trn['pin_memory'],
+        load_strict=wts['load_strict'],
+        continue_training=trn['continue_training'],
+        image_weights=wts['image_weights'],
+        language_weights=wts['language_weights'],
+        use_amp=trn['use_amp'],
+        max_grad_norm=trn['grad_clip'],
+        accumulation_steps=trn.get('accumulation_steps', 1),
+        early_stopping_patience=trn.get('early_stopping_patience', 2),
+        distributed=trn['distributed'],
+        txt_format=data['txt_format'],
+        max_length=mdl.get('max_length', None),
+        data_format=data['data_format'],
+        load_method=data['load_method'],
+        use_wandb=wb['enabled'],
+        wandb_project=wb['project'],
+        wandb_entity=wb['entity'],
+        config=cfg,
+    )
+
     print('[INFO] beginning training...')
     trainer.train_accelerate()
-    
-
-
-
-
-
-
 
 
 if __name__ == '__main__':
-    train()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--config', type=str, required=True, help='Path to YAML config file')
+    args = parser.parse_args()
+    train(args.config)
