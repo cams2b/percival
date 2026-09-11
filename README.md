@@ -290,6 +290,7 @@ We gratefully acknowledge the contributions of:
 - [Penn Medicine BioBank (PMBB)](https://pmbb.med.upenn.edu/) for providing the training data
 - [Merlin](https://github.com/StanfordMIMI/Merlin) and [CT-CLIP](https://github.com/ibrahimethemhamamci/CT-CLIP) for foundational work in 3D medical VLMs
 - [CT-RATE](https://huggingface.co/datasets/ibrahimhamamci/CT-RATE) for the external validation dataset
+- [HLIP](https://github.com/zch0414/hlip) for the 3D sinusoidal position embedding and 2D-to-3D weight inflation
 - [timm](https://github.com/huggingface/pytorch-image-models) for pretrained vision transformer implementations
 - [Hugging Face Transformers](https://github.com/huggingface/transformers) for text encoder infrastructure
 

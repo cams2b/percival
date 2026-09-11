@@ -41,11 +41,10 @@ class PatchEmbed3D(PatchEmbed):
 
 # ---------------------------------------------------------------------------
 # Position embedding helpers
+# Adapted from HLIP (Zhao et al., TMLR 2026), https://github.com/zch0414/hlip
 # ---------------------------------------------------------------------------
-
 def get_3d_sincos_pos_embed(embed_dim, grid_size, cls_token=False):
     """Generate 3D sinusoidal position embeddings.
-
     Args:
         embed_dim: Must be divisible by 3.
         grid_size: (D, H, W)
