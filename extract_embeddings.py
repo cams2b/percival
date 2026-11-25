@@ -188,7 +188,8 @@ def embed_volume(model, img: torch.Tensor, device: torch.device) -> torch.Tensor
 # Model build
 # ---------------------------------------------------------------------------
 
-def build_percival(config_path: str, weights_path: str, device: torch.device) -> Percival:
+def build_percival(config_path: str, weights_path: str, device: torch.device,
+                   strict: bool = True) -> Percival:
     with open(config_path, "r") as f:
         cfg = yaml.safe_load(f)
     mdl = cfg["model"]
@@ -209,10 +210,13 @@ def build_percival(config_path: str, weights_path: str, device: torch.device) ->
         use_distributed_loss=False,
         loss_type=mdl.get("loss_type", "clip"),
     )
-    # strict=False — checkpoint stores only the visual tower; language
-    # tower stays at construction-time init and is never touched during
-    # embedding extraction.
-    model.load_visual(weights_path, strict=False)
+    # load_visual only loads into the visual tower (the language tower
+    # stays at construction-time init and is never touched during embedding
+    # extraction), so a checkpoint that matches the config loads with
+    # strict=True. With strict=False, missing / unexpected keys are
+    # tolerated and shape-mismatched tensors are dropped and left at their
+    # construction-time init, with only a printed [WARN].
+    model.load_visual(weights_path, strict=strict)
     model.eval()
     model.to(device)
     return model
@@ -235,7 +239,8 @@ def run_single(args, device):
     mdl = cfg["model"]
     image_size_xyz = tuple(mdl["image_size"])
 
-    model = build_percival(args.config, args.weights, device)
+    model = build_percival(args.config, args.weights, device,
+                           strict=not args.no_strict)
 
     t0 = time.time()
     img = load_volume(args.pt_path, args.nifti_path, image_size_xyz)
@@ -276,7 +281,8 @@ def run_manifest(args, device):
             f"'{NIFTI_PATH_COLUMN}' columns. present: {list(df.columns)}"
         )
 
-    model = build_percival(args.config, args.weights, device)
+    model = build_percival(args.config, args.weights, device,
+                           strict=not args.no_strict)
 
     # Per-row plan: pick a source path, derive a deterministic output path.
     sources    = [None] * len(df)   # tuples (kind, path)
@@ -399,6 +405,11 @@ def main():
                          "On CPU keep at 1.")
 
     ap.add_argument("--device", default="auto", choices=["auto", "cuda", "cpu"])
+    ap.add_argument("--no-strict", action="store_true",
+                    help="Load the checkpoint with strict=False (previous "
+                         "behaviour): tensors that are missing or do not "
+                         "match the config are skipped with a [WARN] instead "
+                         "of raising.")
 
     args = ap.parse_args()
 
