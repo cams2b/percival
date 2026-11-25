@@ -14,6 +14,12 @@ Public API:
 
     model = InferenceModel(img_weights="/path/to/visual_epoch_*.pth")
 
+    # tiny / small backbones: `projection_dim` follows `vision_model_size`.
+    # The shipped diagnostic / prognostic tables are 768-d (fit on
+    # augreg_base embeddings), so tiny / small models support `embed()` only.
+    model = InferenceModel(img_weights="/path/to/visual_epoch_*.pth",
+                           vision_model_size="tiny")
+
     # one-shot diagnostic across all regions
     df, summary = model.diagnostic_inference_all_conditions(img_path="scan.nii.gz")
 
@@ -81,6 +87,9 @@ COX_FILES = {
 # Percival embedding dimension (augreg_base_v0).
 PROJECTION_DIM = 768
 
+# Embedding dimension per backbone size (configs/augreg_{size}_v0.yaml).
+PROJECTION_DIMS = {"tiny": 192, "small": 384, "base": PROJECTION_DIM}
+
 
 # ---------------------------------------------------------------------------
 # Internal helpers (deferred import so the file is importable without torch)
@@ -107,16 +116,20 @@ class InferenceModel:
         vision_model_size: str = "base",
         vision_pretrain: str = "augreg",
         in_channels: int = 1,
-        projection_dim: int = PROJECTION_DIM,
+        projection_dim: Optional[int] = None,      # None -> by vision_model_size
         image_size: tuple = (352, 352, 128),       # (W, H, D)
         target_spacing: tuple = (3.0, 1.0, 1.0),   # (z, y, x) for NIfTI resample
         patch_size: tuple = (8, 16, 16),
         language_model: str = "microsoft/BiomedVLP-CXR-BERT-specialized",
         device: Union[str, torch.device] = "auto",
+        strict: bool = True,
     ):
         # ---- Build Percival, load visual checkpoint, set eval mode ----
         self.device = _resolve_device(device)
         print(f"[InferenceModel] device = {self.device}")
+
+        if projection_dim is None:
+            projection_dim = PROJECTION_DIMS.get(vision_model_size, PROJECTION_DIM)
 
         self.image_size      = tuple(image_size)
         self.target_spacing  = tuple(target_spacing)
@@ -138,9 +151,14 @@ class InferenceModel:
             use_distributed_loss=False,
             loss_type="clip",
         )
-        # strict=False: checkpoint contains only the visual tower; language
-        # tower is HF-initialized and never touched during inference.
-        self.model.load_visual(str(img_weights), strict=False)
+        # load_visual only loads into the visual tower (the language tower
+        # is HF-initialized and never touched during inference), so a
+        # matching checkpoint loads with strict=True. With strict=False,
+        # missing / unexpected keys are tolerated and any shape-mismatched
+        # tensor is dropped and left at its construction-time init (random
+        # for the projection head when `projection_dim` does not match the
+        # checkpoint), with only a printed [WARN].
+        self.model.load_visual(str(img_weights), strict=strict)
         self.model.eval().to(self.device)
 
         # ---- Caches for shipped per-region weight tables (lazy) ----
@@ -158,7 +176,7 @@ class InferenceModel:
 
         Returns
         -------
-        np.ndarray  shape (PROJECTION_DIM,)
+        np.ndarray  shape (projection_dim,)
         """
         # Imports kept local so importing this module doesn't drag in
         # SimpleITK / MONAI unless someone actually runs inference.
@@ -273,6 +291,26 @@ class InferenceModel:
         return self.embed(img_path)
 
     # ----------------------------------------------------------------------
+    # Private — shipped weight-table column selection
+    # ----------------------------------------------------------------------
+
+    def _table_columns(self, df: pd.DataFrame, prefix: str, path: Path) -> list:
+        """Return the `{prefix}_0 .. {prefix}_{D-1}` column names of a weight
+        table (D = self.projection_dim), after checking that those are
+        exactly the `{prefix}_*` columns the table has."""
+        cols = [f"{prefix}_{i}" for i in range(self.projection_dim)]
+        n = sum(1 for c in df.columns if c.startswith(f"{prefix}_"))
+        if n != len(cols) or not set(cols) <= set(df.columns):
+            raise ValueError(
+                f"{path.name} has {n} '{prefix}_*' columns, but this model "
+                f"produces {self.projection_dim}-dimensional embeddings, so "
+                f"the table cannot score them. (The tables shipped in "
+                f"inference/ were fit on augreg_base, {PROJECTION_DIM}-d, "
+                f"embeddings.)"
+            )
+        return cols
+
+    # ----------------------------------------------------------------------
     # Private — classifier table loader (cached) + scoring
     # ----------------------------------------------------------------------
 
@@ -297,9 +335,9 @@ class InferenceModel:
         common = w_df.index.intersection(s_df.index)
         w_df, s_df = w_df.loc[common], s_df.loc[common]
 
-        w_cols  = [f"w_{i}"     for i in range(self.projection_dim)]
-        m_cols  = [f"mean_{i}"  for i in range(self.projection_dim)]
-        sc_cols = [f"scale_{i}" for i in range(self.projection_dim)]
+        w_cols  = self._table_columns(w_df, "w",     w_path)
+        m_cols  = self._table_columns(s_df, "mean",  s_path)
+        sc_cols = self._table_columns(s_df, "scale", s_path)
 
         tbl = {
             "codes":         w_df["code"].astype(str).to_numpy(),
@@ -376,7 +414,7 @@ class InferenceModel:
         print(f"[InferenceModel] loading cox weights for {region}")
         df = pd.read_csv(w_path).set_index("code", drop=False)
 
-        w_cols = [f"w_{i}" for i in range(self.projection_dim)]
+        w_cols = self._table_columns(df, "w", w_path)
         tbl = {
             "codes":               df["code"].astype(str).to_numpy(),
             "W":                   df[w_cols].to_numpy(dtype=float),
